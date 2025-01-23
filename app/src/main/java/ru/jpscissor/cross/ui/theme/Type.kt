@@ -8,9 +8,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.Font
 import ru.jpscissor.cross.R
 
-val NewPeninimFontFamily = FontFamily(
-    Font(R.font.new_peninim_mt)
-)
 
 
 // Set of Material typography styles to start with

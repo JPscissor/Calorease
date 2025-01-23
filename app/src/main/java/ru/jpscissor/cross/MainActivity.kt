@@ -27,12 +27,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             CrossTheme {
                 Scaffold(
+                    containerColor = Color(0xFF1A1919),
                     content = { paddingValues ->
                         Surface(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(paddingValues),
-                            color = Color.White
+                            color = Color(0xFF1A1919)
                         ) {
                             AppNavHost()
                         }

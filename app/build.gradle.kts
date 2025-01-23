@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "ru.jpscissor.cross"
-        minSdk = 30
+        minSdk = 28
         //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
