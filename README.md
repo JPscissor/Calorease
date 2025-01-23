@@ -1,1 +1,1 @@
-# CompTemporay
+# Курсач
