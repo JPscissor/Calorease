@@ -9,9 +9,7 @@ local.properties
 *.lock
 
 # Gradle wrapper
-gradle/
-gradlew
-gradlew.bat
+
 
 # OS-specific files
 *.DS_Store
