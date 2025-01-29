@@ -13,13 +13,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,51 +36,77 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ru.jpscissor.cross.models.HomeViewModel
+import ru.jpscissor.cross.models.UserViewModel
+import ru.jpscissor.cross.navigation.NavRoute
 import ru.jpscissor.cross.ui.theme.CrossTheme
 import kotlin.math.roundToInt
+
+object GlobalData {
+    var proteinsNorm = 0.0
+    var carbsNorm = 0.0
+    var fatsNorm = 0.0
+    var calsNorm = 0.0
+}
+
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomescScreen(
     navController: NavHostController,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: UserViewModel = viewModel()
     ) {
 
-    val state = viewModel.uiState.collectAsState()
-    val calculatedCalories = CalcCalories(state.value.proteins, state.value.carbs, state.value.fats)
-    val progressState = remember { androidx.compose.runtime.mutableDoubleStateOf(0.0) }
+    val user by viewModel.user.observeAsState(initial = null)
 
-    viewModel.updateNutritionNorm(139, 347, 93 )
-    viewModel.updateCalNorm(2775)
+//    CalcStats()
+
+    var proteins = 0
+    var carbs = 0
+    var fats = 0
+    var cals = 0
+
+    val progressState = remember { mutableDoubleStateOf(0.0) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = Color(0xFF1E1E1E),
+        containerColor = Color(0xFF1A1919),
         floatingActionButton = {
             FloatingActionButton(
+                modifier = Modifier.padding(vertical = 45.dp),
+                containerColor = Color(0xFF79FF57),
                 onClick = {
-                    viewModel.updateNutrition(
-                        state.value.proteins+18,
-                        state.value.carbs+35,
-                        state.value.fats+3)
-
-
-                    val percent = ((calculatedCalories.toDouble() / state.value.calNorm.toDouble()) * 100).coerceAtMost(100.0)
-                    progressState.doubleValue = percent / 100 + 0.05
+                    TODO("ПРИЕМ ПИЩИ+")
+                    TODO("ПРОЦЕНТ ЗАПОЛНЕНИЯ")
 
                 }
             ) {
-                androidx.compose.material3.Text("➕")
+                Text("+", color = Color.DarkGray, fontSize = 32.sp)
             }
 
         }
     ) {
+
+        Button(
+            onClick = { navController.navigate(NavRoute.Settingsc.route) },
+            modifier = Modifier.padding(vertical = 20.dp, horizontal = 20.dp),
+            colors = ButtonColors(
+                containerColor = Color(0xFF79FF57),
+                contentColor = Color.DarkGray,
+                disabledContainerColor = Color(0xFF79FF57),
+                disabledContentColor = Color(0xFF79FF57)
+            )
+        ) {
+            Text(":)", color = Color.DarkGray)
+        }
+
         Column(
-            modifier = Modifier.fillMaxSize().padding(vertical = 40.dp),
+            modifier = Modifier.fillMaxSize().padding(vertical = 0.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -234,6 +266,48 @@ fun CalcCalories(proteins: Int, carbs: Int, fats: Int): Int {
     return (proteins * 4) + (carbs * 4) + (fats * 9)
 }
 
+fun CalcStats(we: Int, he: Int, ag: Int, ge: Int, al: Int) {
+    if (ge == 0) {
+        if (al == 1){
+            GlobalData.calsNorm = (10 * we + 6.25 * he - 5 * ag + 5) * 1.2
+            GlobalData.proteinsNorm = ((10 * we + 6.25 * he - 5 * ag + 5) * 1.2) / 0.3
+            GlobalData.carbsNorm = ((10 * we + 6.25 * he - 5 * ag + 5) * 1.2) / 0.3
+            GlobalData.fatsNorm = ((10 * we + 6.25 * he - 5 * ag + 5) * 1.2) / 0.4
+        }
+        if (al == 2){
+            GlobalData.calsNorm = (10 * we + 6.25 * he - 5 * ag + 5) * 1.55
+            GlobalData.proteinsNorm = ((10 * we + 6.25 * he - 5 * ag + 5) * 1.55) / 0.3
+            GlobalData.carbsNorm = ((10 * we + 6.25 * he - 5 * ag + 5) * 1.55) / 0.3
+            GlobalData.fatsNorm = ((10 * we + 6.25 * he - 5 * ag + 5) * 1.55) / 0.4
+        }
+        if (al == 3){
+            GlobalData.calsNorm = (10 * we + 6.25 * he - 5 * ag + 5) * 1.725
+            GlobalData.proteinsNorm = ((10 * we + 6.25 * he - 5 * ag + 5) * 1.725) / 0.3
+            GlobalData.carbsNorm = ((10 * we + 6.25 * he - 5 * ag + 5) * 1.725) / 0.3
+            GlobalData.fatsNorm = ((10 * we + 6.25 * he - 5 * ag + 5) * 1.725) / 0.4
+        }
+    }
+    else {
+        if (al == 1){
+            GlobalData.calsNorm = (10 * we + 6.25 * he - 5 * ag - 161) * 1.2
+            GlobalData.proteinsNorm = ((10 * we + 6.25 * he - 5 * ag - 161) * 1.2) / 0.3
+            GlobalData.carbsNorm = ((10 * we + 6.25 * he - 5 * ag - 161) * 1.2) / 0.3
+            GlobalData.fatsNorm = ((10 * we + 6.25 * he - 5 * ag - 161) * 1.2) / 0.4
+        }
+        if (al == 2){
+            GlobalData.calsNorm = (10 * we + 6.25 * he - 5 * ag - 161) * 1.55
+            GlobalData.proteinsNorm = ((10 * we + 6.25 * he - 5 * ag - 161) * 1.55) / 0.3
+            GlobalData.carbsNorm = ((10 * we + 6.25 * he - 5 * ag - 161) * 1.55) / 0.3
+            GlobalData.fatsNorm = ((10 * we + 6.25 * he - 5 * ag - 161) * 1.55) / 0.4
+        }
+        if (al == 3){
+            GlobalData.calsNorm = (10 * we + 6.25 * he - 5 * ag - 161) * 1.725
+            GlobalData.proteinsNorm = ((10 * we + 6.25 * he - 5 * ag - 161) * 1.725) / 0.3
+            GlobalData.carbsNorm = ((10 * we + 6.25 * he - 5 * ag - 161) * 1.725) / 0.3
+            GlobalData.fatsNorm = ((10 * we + 6.25 * he - 5 * ag - 161) * 1.725) / 0.4
+        }
+    }
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

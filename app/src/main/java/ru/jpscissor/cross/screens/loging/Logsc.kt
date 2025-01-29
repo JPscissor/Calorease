@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,17 +35,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import ru.jpscissor.cross.models.UserViewModel
 import ru.jpscissor.cross.navigation.NavRoute
 import ru.jpscissor.cross.ui.theme.CrossTheme
 import kotlin.math.abs
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InvalidColorHexValue")
 @Composable
-fun LogscScreen(navController: NavHostController) {
+fun LogscScreen(
+    navController: NavHostController,
+    viewModel: UserViewModel = viewModel()
+) {
 
-    var checkVal = 0
     var selectedIndex by remember { mutableIntStateOf(0) }
     var selectedGender by remember { mutableIntStateOf(0) }
+
+    var w by remember { mutableStateOf(0) }
+    var h by remember { mutableStateOf(0) }
+    var a by remember { mutableStateOf(0) }
+    var gender by remember { mutableStateOf(0) }
+    var activityLevel by remember { mutableStateOf(1) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -88,7 +98,7 @@ fun LogscScreen(navController: NavHostController) {
                         minValue = 30,
                         maxValue = 150,
                         initialValue = 0,
-                        onValueChange = { checkVal++ }
+                        onValueChange = { w = it }
                     )
 
                     ParameterInput(
@@ -96,7 +106,7 @@ fun LogscScreen(navController: NavHostController) {
                         minValue = 130,
                         maxValue = 220,
                         initialValue = 0,
-                        onValueChange = { checkVal++ }
+                        onValueChange = { h = it }
                     )
 
                     ParameterInput(
@@ -104,7 +114,7 @@ fun LogscScreen(navController: NavHostController) {
                         minValue = 16,
                         maxValue = 99,
                         initialValue = 0,
-                        onValueChange = { checkVal++ }
+                        onValueChange = { a = it }
                     )
 
                     Text(
@@ -118,7 +128,7 @@ fun LogscScreen(navController: NavHostController) {
 
                     GenderSelector(
                         selectedGender = selectedGender,
-                        onValueChange = { selectedGender = it; checkVal++ }
+                        onValueChange = { selectedGender = it; gender = it }
                     )
 
                     Text(
@@ -132,20 +142,25 @@ fun LogscScreen(navController: NavHostController) {
 
                     ActivitySelector(
                         selectedIndex = selectedIndex,
-                        onValueChange = { selectedIndex = it; checkVal++; }
+                        onValueChange = { selectedIndex = it; activityLevel = it}
                     )
                 }
             }
 
             Button(
-                onClick = { if (checkVal >= 5) navController.navigate(NavRoute.Homesc.route)},
+                onClick = {
+                    if (w != 0 && h != 0 && a != 0) {
+                        navController.navigate(NavRoute.Homesc.route)
+                        viewModel.insertUser(w, h, a, gender, activityLevel)
+                    }
+                          },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(40.dp)
                     .align(Alignment.BottomCenter),
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (checkVal >= 5) Color(0xFF79FF57) else Color(0xF79FF57)
+                    containerColor = if (w != 0 && h != 0 && a != 0) Color(0xFF79FF57) else Color(0xF79FF57)
                 )
             ) {
                 Text("Далее", fontSize = 18.sp,

@@ -1,7 +1,11 @@
 package ru.jpscissor.cross.screens.settings
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,20 +23,21 @@ import ru.jpscissor.cross.navigation.NavRoute
 import ru.jpscissor.cross.screens.loging.ActivitySelector
 import ru.jpscissor.cross.ui.theme.CrossTheme
 import ru.jpscissor.cross.screens.loging.ParameterInput
+import kotlin.math.abs
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InvalidColorHexValue")
 @Composable
 fun SettingscScreen(navController: NavHostController) {
 
-    var checkVal = 1
-    var selectedIndex by remember { mutableStateOf(1) }
+    var checkVal = 0
+    var selectedIndex by remember { mutableIntStateOf(0) }
+    var selectedGender by remember { mutableIntStateOf(0) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color(0xFF1A1919)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().padding(vertical = 25.dp)) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -44,16 +49,16 @@ fun SettingscScreen(navController: NavHostController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
-                    text = "Редактирование Данных",
-                    color = Color.White,
+                    text = "Настройки",
+                    color = Color(0xFF79FF57),
                     textAlign = TextAlign.Center,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = "здесь вы можете изменить введеную ранее информацию",
-                    color = Color.White,
+                    text = "тут вы можете изменить свои параметры соотвественно текущим",
+                    color = Color(0xFF79FF57),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 40.dp),
                     fontSize = 16.sp,
@@ -68,7 +73,7 @@ fun SettingscScreen(navController: NavHostController) {
                         label = "Вес",
                         minValue = 30,
                         maxValue = 150,
-                        initialValue = 70,
+                        initialValue = 0,
                         onValueChange = { checkVal++ }
                     )
 
@@ -76,7 +81,7 @@ fun SettingscScreen(navController: NavHostController) {
                         label = "Рост",
                         minValue = 130,
                         maxValue = 220,
-                        initialValue = 170,
+                        initialValue = 0,
                         onValueChange = { checkVal++ }
                     )
 
@@ -84,8 +89,22 @@ fun SettingscScreen(navController: NavHostController) {
                         label = "Возраст",
                         minValue = 16,
                         maxValue = 99,
-                        initialValue = 25,
+                        initialValue = 0,
                         onValueChange = { checkVal++ }
+                    )
+
+                    Text(
+                        text = "Пол",
+                        modifier = Modifier
+                            .padding(vertical = 16.dp, horizontal = 0.dp)
+                            .fillMaxWidth(),
+                        fontSize = 18.sp,
+                        color = Color(0xFF79FF57)
+                    )
+
+                    GenderSelector(
+                        selectedGender = selectedGender,
+                        onValueChange = { selectedGender = it; checkVal++ }
                     )
 
                     Text(
@@ -94,31 +113,143 @@ fun SettingscScreen(navController: NavHostController) {
                             .padding(vertical = 16.dp, horizontal = 0.dp)
                             .fillMaxWidth(),
                         fontSize = 18.sp,
-                        color = Color.White
+                        color = Color(0xFF79FF57)
                     )
 
                     ActivitySelector(
                         selectedIndex = selectedIndex,
-                        onValueChange = { selectedIndex = it }
+                        onValueChange = { selectedIndex = it; checkVal++; }
                     )
                 }
             }
 
             Button(
-                onClick = { if (checkVal >= 3) navController.navigate(NavRoute.Homesc.route)},
+                onClick = { if (checkVal >= 5) navController.navigate(NavRoute.Homesc.route)},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(40.dp)
                     .align(Alignment.BottomCenter),
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White
+                    containerColor = if (checkVal >= 5) Color(0xFF79FF57) else Color(0xF79FF57)
                 )
             ) {
                 Text("Готово", fontSize = 18.sp,
-                    color = Color(0xFF000000)
+                    color = Color.DarkGray
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ParameterInput(label: String, minValue: Int, maxValue: Int, initialValue: Int, onValueChange: (Int) -> Unit) {
+    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+        Text(
+            text = label,
+            color = Color(0xFF79FF57),
+            textAlign = TextAlign.Start,
+            fontSize = 18.sp,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        HorizontalValuePicker(
+            minValue = minValue,
+            maxValue = maxValue,
+            initialValue = initialValue,
+            onValueChange = onValueChange
+        )
+    }
+}
+
+@Composable
+fun HorizontalValuePicker(minValue: Int, maxValue: Int, initialValue: Int, onValueChange: (Int) -> Unit) {
+    var selectedValue by remember { mutableIntStateOf(initialValue) }
+
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        items((minValue..maxValue).toList()) { value ->
+            val alpha = 1f - (0.1f * abs(value - selectedValue))
+            val scale = if (value == selectedValue) 1.2f else 1f
+
+            Box(
+                modifier = Modifier
+                    .width(60.dp)
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = value.toString(),
+                    fontSize = (20f * scale).coerceAtLeast(10f).sp,
+                    fontWeight = if (value == selectedValue) FontWeight.ExtraBold else FontWeight.Normal,
+                    color = if (value == selectedValue) Color.DarkGray else Color.Gray.copy(alpha = alpha.coerceAtLeast(0.5f)),
+                    modifier = Modifier
+                        .background(
+                            color = if (selectedValue == value) Color(0xFF79FF57) else Color.Transparent,
+                            shape = RoundedCornerShape(8.dp))
+                        .clickable {
+                            selectedValue = value
+                            onValueChange(value)
+                        }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ActivitySelector(selectedIndex: Int, onValueChange: (Int) -> Unit) {
+    val labels = listOf("Низкая", "Умеренная", "Высокая")
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(labels.size) { index ->
+            Text(
+                text = labels[index],
+                fontWeight = if (selectedIndex == index) FontWeight.Bold else FontWeight.Normal,
+                color = Color.DarkGray,
+                modifier = Modifier
+                    .clickable { onValueChange(index) }
+                    .padding(8.dp)
+                    .background(
+                        color = if (selectedIndex == index) Color(0xFF79FF57) else Color.Transparent,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
+    }
+}
+
+
+@Composable
+fun GenderSelector(selectedGender: Int, onValueChange: (Int) -> Unit) {
+    val labels = listOf("Мужской", "Женский")
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(labels.size) { index ->
+            Text(
+                text = labels[index],
+                fontWeight = if (selectedGender == index) FontWeight.Bold else FontWeight.Normal,
+                color = Color.DarkGray,
+                modifier = Modifier
+                    .clickable { onValueChange(index) }
+                    .padding(8.dp)
+                    .background(
+                        color = if (selectedGender == index) Color(0xFF79FF57) else Color.Transparent,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            )
         }
     }
 }
