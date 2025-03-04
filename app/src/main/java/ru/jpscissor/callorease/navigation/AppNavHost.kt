@@ -81,6 +81,6 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
         })
     }
     composable(NavRoute.Themetest.route) {
-        ThemeTestScreen()
+        ThemeTestScreen(onBack = {navController.navigate(NavRoute.ThemeSelection.route)})
     }
 }

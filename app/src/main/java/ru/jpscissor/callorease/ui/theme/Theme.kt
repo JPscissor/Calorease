@@ -80,7 +80,7 @@ fun inPreview(): Boolean = LocalInspectionMode.current
 
 @Composable
 fun CallorEaseTheme(
-    appTheme: AppTheme = AppTheme.Light,
+    appTheme: AppTheme = AppTheme.Monochrome,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when (appTheme) {
