@@ -414,7 +414,7 @@ fun ActivitySelection() {
         }
     }
 
-    // Card2
+    // Carrd2
     Card(
         Modifier.width(112.dp).height(54.dp),
         colors = CardColors(
