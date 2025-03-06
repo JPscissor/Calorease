@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,7 +60,7 @@ fun ThemeSelectionScreen(themeManager: ThemeManager, onBack: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp,  vertical = 32.dp)
+                .padding(horizontal = 24.dp,  vertical = 24.dp)
         ) {
 
             Column(
@@ -116,8 +117,8 @@ fun ThemeSelectionScreen(themeManager: ThemeManager, onBack: () -> Unit) {
                 shape = RoundedCornerShape(15.dp),
             ) {
                 Text("Далее", fontSize = 20.sp,
-                    color = if (ind > 0) {Color.Black}
-                            else {Color.Gray}
+                    color = if (ind > 0) {Color.Black}; else {Color.Gray},
+                    fontWeight = FontWeight.Medium
                 )
             }
 

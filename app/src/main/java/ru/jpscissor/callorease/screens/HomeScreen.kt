@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
-fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit, onNvigateToThemetest: () -> Unit) {
+fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -21,7 +21,7 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit, 
         Text("HOME")
 
         Button(
-            onClick = {onNvigateToThemetest()}
+            onClick = {}
         ) {
             Text("Тест Темы")
         }

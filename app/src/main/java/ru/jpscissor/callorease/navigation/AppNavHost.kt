@@ -70,8 +70,7 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
     composable(NavRoute.Home.route) {
         HomeScreen(
             onNavigateToProfile = { navController.navigate(NavRoute.Profile.route) },
-            onNavigateToAdding = { navController.navigate(NavRoute.Adding.route) },
-            onNvigateToThemetest = { navController.navigate(NavRoute.Themetest.route) }
+            onNavigateToAdding = { navController.navigate(NavRoute.Adding.route) }
         )
     }
 

@@ -1,10 +1,12 @@
 package ru.jpscissor.callorease.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +21,7 @@ import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 fun OnboardScreen(onNavigateToSelect: () -> Unit) {
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -28,7 +30,7 @@ fun OnboardScreen(onNavigateToSelect: () -> Unit) {
         Button(
             onClick = {onNavigateToSelect()}
         ) {
-            Text("Далее")
+            Text("Далее", color = MaterialTheme.colorScheme.tertiary)
         }
     }
 
