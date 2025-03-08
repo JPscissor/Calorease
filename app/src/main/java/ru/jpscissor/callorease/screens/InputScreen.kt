@@ -468,8 +468,6 @@ fun ActivitySelection() {
 @Composable
 @Preview
 fun PrevInputScreen() {
-    val navController = rememberNavController()
-
     AppThemeWrapper {
         InputScreen { {} }
     }

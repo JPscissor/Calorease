@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -18,7 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.navigation.NavRoute
+import ru.jpscissor.callorease.ui.theme.AppTheme
 import ru.jpscissor.callorease.ui.theme.CallorEaseTheme
+import ru.jpscissor.callorease.ui.theme.LocalThemeManager
 
 
 @Composable
@@ -36,25 +39,27 @@ fun SplashScreen(onNavigateToOnboard: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().background(Color(0xFFFFFFFF)),
+            modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
 
             Image(
-                painter = painterResource(id = R.drawable.app_icon_green),
+                painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.app_icon_black) }
+                            else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.app_icon_green) }
+                            else { painterResource(R.drawable.app_icon_green) },
                 contentDescription = "",
-                modifier = Modifier.size(164.dp)
+                modifier = Modifier.size(165.dp)
             )
         }
     }
 
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun PrevSplashScreen() {
-//    CallorEaseTheme {
-//        SplashScreen(onNavigateToOnboard = TODO())
-//    }
-//}
+@Preview(showBackground = true)
+@Composable
+fun PrevSplashScreen() {
+    CallorEaseTheme {
+        SplashScreen({})
+    }
+}

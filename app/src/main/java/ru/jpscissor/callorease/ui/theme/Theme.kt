@@ -7,6 +7,8 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -117,6 +119,22 @@ class ThemeManager(private val context: Context) {
             AppTheme.Dark -> "Тёмная тема"
             AppTheme.Monochrome -> "Монохромная тема"
         }
+    }
+}
+
+
+val LocalThemeManager = staticCompositionLocalOf<ThemeManager> {
+    error("No ThemeManager provided")
+}
+
+// Функция-обертка для предоставления ThemeManager
+@Composable
+fun ThemeProvider(
+    themeManager: ThemeManager,
+    content: @Composable () -> Unit
+) {
+    CompositionLocalProvider(LocalThemeManager provides themeManager) {
+        content()
     }
 }
 
