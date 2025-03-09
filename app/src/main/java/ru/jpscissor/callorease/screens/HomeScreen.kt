@@ -1,5 +1,6 @@
 package ru.jpscissor.callorease.screens
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,28 +16,48 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.jpscissor.callorease.R
+import ru.jpscissor.callorease.screens.GlobalProgress.progressCalories
+import ru.jpscissor.callorease.screens.GlobalProgress.progressCarbohydrates
+import ru.jpscissor.callorease.screens.GlobalProgress.progressFats
+import ru.jpscissor.callorease.screens.GlobalProgress.progressProteins
+import ru.jpscissor.callorease.screens.GlobalProgress.progressWater
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
+
+object GlobalProgress {
+    var progressCalories by mutableFloatStateOf(0.18f)
+    var progressProteins by mutableFloatStateOf(0.25f)
+    var progressCarbohydrates by mutableFloatStateOf(0.75f)
+    var progressFats by mutableFloatStateOf(0.09f)
+    var progressWater by mutableFloatStateOf(0.7f)
+}
 
 @Composable
 fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit) {
+
 
     Column(
         modifier = Modifier
@@ -47,13 +68,13 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit) 
         Column(
             modifier = Modifier
 
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
 
             //Upper Panel
             UpperPanel()
 
-            Spacer(Modifier.height(35.dp))
+            Spacer(Modifier.height(16.dp))
 
             //Midle Tiles
             Tiles()
@@ -67,7 +88,7 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit) 
 
         Spacer(Modifier.weight(1f))
 
-        BottomPanel({})
+        BottomPanel(onNavigateToAdding)
     }
 
 }
@@ -168,7 +189,13 @@ fun Calories() {
         ) {
 
             //Progress
-            Text("Progr\nessBar")
+            CircularProgressIndicatorCustom(
+                progress = progressCalories,
+                size = 140.dp,
+                strokeWidth = 10.dp,
+                color = MaterialTheme.colorScheme.onSurface,
+                backgroundColor = MaterialTheme.colorScheme.surface
+            )
 
             Column(
                 modifier = Modifier
@@ -215,7 +242,13 @@ fun Proteins() {
         ) {
 
             //Progress
-            Text("Progr\nessBar")
+            CircularProgressIndicatorCustom(
+                progress = progressProteins,
+                size = 70.dp,
+                strokeWidth = 7.dp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -259,8 +292,13 @@ fun Carbohydrates() {
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            //Progress
-            Text("Progr\nessBar")
+            CircularProgressIndicatorCustom(
+                progress = progressCarbohydrates,
+                size = 70.dp,
+                strokeWidth = 7.dp,
+                color = MaterialTheme.colorScheme.inverseOnSurface,
+                backgroundColor = MaterialTheme.colorScheme.inverseSurface
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -305,7 +343,13 @@ fun Fats() {
         ) {
 
             //Progress
-            Text("Progr\nessBar")
+            CircularProgressIndicatorCustom(
+                progress = progressFats,
+                size = 70.dp,
+                strokeWidth = 7.dp,
+                color = MaterialTheme.colorScheme.onSecondary,
+                backgroundColor = MaterialTheme.colorScheme.secondary
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -402,7 +446,9 @@ fun WaterCounter() {
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
+
                 Spacer(Modifier.width(5.dp))
+
                 Text(
                     text = "300мл",
                     color = MaterialTheme.colorScheme.tertiary,
@@ -418,9 +464,14 @@ fun WaterCounter() {
                 fontWeight = FontWeight.Medium,
                 modifier =  Modifier.padding(horizontal = 25.dp)
             )
-            Spacer(Modifier.height(5.dp))
-            Text(
-                text = "прогресспрогресспрогресспрогресспрогр"
+
+            Spacer(Modifier.height(8.dp))
+
+            CustomLinearProgressIndicator(
+                progress = progressWater,
+                height = 8.dp,
+                color = MaterialTheme.colorScheme.onSecondary,
+                backgroundColor = MaterialTheme.colorScheme.secondary
             )
 
         }
@@ -470,9 +521,9 @@ fun BottomPanel(onButtonClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
-            .background(Color.White), // Цвет фона нижней панели
-        contentAlignment = Alignment.Center // Центрируем содержимое внутри панели
+            .height(70.dp)
+            .background(MaterialTheme.colorScheme.onBackground),
+        contentAlignment = Alignment.Center
     ) {
         IconButton(
             onClick = onButtonClick,
@@ -483,6 +534,83 @@ fun BottomPanel(onButtonClick: () -> Unit) {
                             else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary) { painterResource(R.drawable.plus_button_green) }
                             else { painterResource(R.drawable.plus_button) },
                 contentDescription = ""
+            )
+        }
+    }
+}
+
+
+@Composable
+fun CircularProgressIndicatorCustom(
+    progress: Float,
+    modifier: Modifier = Modifier,
+    size: Dp = 140.dp,
+    strokeWidth: Dp = 10.dp,
+    color: Color = MaterialTheme.colorScheme.onSecondary,
+    backgroundColor: Color = MaterialTheme.colorScheme.onSurface
+) {
+    Box(
+        modifier = modifier.size(size)
+    ) {
+        Canvas(modifier = Modifier.size(size)) {
+            val strokeWidthPx = strokeWidth.toPx()
+            val sizePx = size.toPx()
+            val circleSizePx = sizePx - strokeWidthPx * 2
+
+
+            drawCircle(
+                color = backgroundColor,
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
+                center = Offset(sizePx / 2, sizePx / 2),
+                radius = circleSizePx / 2
+            )
+
+
+            drawArc(
+                color = color,
+                startAngle = -90f,
+                sweepAngle = 360f * progress,
+                useCenter = false,
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Square),
+                topLeft = Offset(strokeWidthPx, strokeWidthPx),
+                size = Size(circleSizePx, circleSizePx)
+            )
+        }
+    }
+}
+
+
+@Composable
+fun CustomLinearProgressIndicator(
+    progress: Float,
+    modifier: Modifier = Modifier,
+    height: Dp = 8.dp,
+    color: Color = Color.Black,
+    backgroundColor: Color = Color.LightGray
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(height)
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+
+
+            drawRect(
+                color = backgroundColor,
+                topLeft = Offset(0f, 0f),
+                size = Size(canvasWidth, canvasHeight)
+            )
+
+
+            drawLine(
+                color = color,
+                start = Offset(0f, canvasHeight / 2),
+                end = Offset(canvasWidth * progress, canvasHeight / 2),
+                strokeWidth = canvasHeight,
+                cap = StrokeCap.Square
             )
         }
     }

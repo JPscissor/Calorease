@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -217,7 +218,7 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
 
             Button(
@@ -228,8 +229,8 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                 },
                 modifier = Modifier
                     .height(50.dp)
-                    .width(130.dp)
-                    .align(Alignment.End),
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black
@@ -254,6 +255,9 @@ fun CustomInputField(
     value: String,
     onValueChange: (String) -> Unit
 ) {
+    // Состояние для отслеживания фокуса
+    var isFocused by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier.width(150.dp).height(70.dp),
         shape = RoundedCornerShape(20.dp),
@@ -271,10 +275,13 @@ fun CustomInputField(
                 onValueChange = onValueChange,
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
-                    .height(70.dp),
+                    .height(70.dp)
+                    .onFocusChanged { focusState ->
+                        isFocused = focusState.isFocused // Обновляем состояние фокуса
+                    },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Center, // Курсор и текст по центру
                     color = Color.Black,
                     fontSize = 24.sp
                 ),
@@ -286,10 +293,14 @@ fun CustomInputField(
                     unfocusedIndicatorColor = Color.Transparent
                 ),
                 placeholder = {
-                    Text(
-                        "Введите...",
-                        color = Color.LightGray
-                    )
+                    if (!isFocused && value.isEmpty()) {
+                        Text(
+                            "Введите...",
+                            color = Color.LightGray,
+                            fontSize = 15.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )

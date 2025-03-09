@@ -60,7 +60,7 @@ fun ThemeSelectionScreen(themeManager: ThemeManager, onBack: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp,  vertical = 24.dp)
+                .padding(horizontal = 24.dp,  vertical = 32.dp)
         ) {
 
             Column(
@@ -107,7 +107,7 @@ fun ThemeSelectionScreen(themeManager: ThemeManager, onBack: () -> Unit) {
                     else if (ind == 2) { themeManager.selectedTheme = AppTheme.Dark; onBack() }
                     else if (ind == 3) { themeManager.selectedTheme = AppTheme.Light; onBack() }
                 },
-                modifier = Modifier.height(50.dp).width(130.dp).align(Alignment.End),
+                modifier = Modifier.height(50.dp).fillMaxWidth().align(Alignment.CenterHorizontally),
                 colors = ButtonColors(
                     containerColor = Color.White,
                     disabledContentColor = Color.White,
