@@ -47,7 +47,7 @@ fun SplashScreen(onNavigateToOnboard: () -> Unit) {
             Image(
                 painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.app_icon_black) }
                             else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.app_icon_green) }
-                            else { painterResource(R.drawable.app_icon_green) },
+                            else { painterResource(R.drawable.app_icon_green_white) },
                 contentDescription = "",
                 modifier = Modifier.size(165.dp)
             )

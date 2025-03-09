@@ -107,14 +107,14 @@ fun ThemeSelectionScreen(themeManager: ThemeManager, onBack: () -> Unit) {
                     else if (ind == 2) { themeManager.selectedTheme = AppTheme.Dark; onBack() }
                     else if (ind == 3) { themeManager.selectedTheme = AppTheme.Light; onBack() }
                 },
-                modifier = Modifier.height(50.dp).fillMaxWidth().align(Alignment.CenterHorizontally),
+                modifier = Modifier.height(50.dp).fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
                 colors = ButtonColors(
                     containerColor = Color.White,
                     disabledContentColor = Color.White,
                     contentColor = Color.Black,
                     disabledContainerColor = Color.Black
                 ),
-                shape = RoundedCornerShape(15.dp),
+                shape = RoundedCornerShape(15.dp)
             ) {
                 Text("Далее", fontSize = 20.sp,
                     color = if (ind > 0) {Color.Black}; else {Color.Gray},

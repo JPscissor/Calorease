@@ -68,13 +68,13 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit) 
         Column(
             modifier = Modifier
 
-                .padding(horizontal = 20.dp, vertical = 16.dp)
+                .padding(horizontal = 20.dp, vertical = 32.dp)
         ) {
 
             //Upper Panel
             UpperPanel()
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(20.dp))
 
             //Midle Tiles
             Tiles()
@@ -98,8 +98,7 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit) 
 fun UpperPanel() {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(

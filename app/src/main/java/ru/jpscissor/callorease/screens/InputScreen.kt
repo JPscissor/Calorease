@@ -68,7 +68,7 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 24.dp)
+                .padding(horizontal = 24.dp, vertical = 32.dp)
         ) {
             // Заголовок
             Column(
@@ -229,7 +229,7 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                 },
                 modifier = Modifier
                     .height(50.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.8f)
                     .align(Alignment.CenterHorizontally),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
