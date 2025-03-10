@@ -2,6 +2,7 @@ package ru.jpscissor.callorease.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -57,10 +58,9 @@ fun NavGraphBuilder.splashGraph(navController: NavController) {
     }
 
     composable(NavRoute.Input.route) {
-        InputScreen(onNavigateToHome =  {
-            navController.navigate(NavRoute.Home.route) {
-                popUpTo(NavRoute.Input.route) { inclusive = true }
-            } })
+        InputScreen(
+            onNavigateToHome = { navController.navigate(NavRoute.Home.route) { popUpTo(NavRoute.Input.route) { inclusive = true } } }
+        )
     }
 
 }

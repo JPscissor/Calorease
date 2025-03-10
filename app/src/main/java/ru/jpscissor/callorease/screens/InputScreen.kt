@@ -1,13 +1,13 @@
 package ru.jpscissor.callorease.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,7 +40,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import ru.jpscissor.callorease.screens.GlobalParams.activelvl
 import ru.jpscissor.callorease.screens.GlobalParams.gender
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
@@ -49,6 +48,9 @@ import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 object GlobalParams {
     var gender by mutableIntStateOf(0)
     var activelvl by mutableIntStateOf(0)
+    var weight by mutableIntStateOf(0)
+    var height by mutableIntStateOf(0)
+    var age by mutableIntStateOf(0)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InvalidColorHexValue")
@@ -58,7 +60,6 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
     var weight by remember { mutableStateOf("") }
     var height by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
-
 
     Column(
         modifier = Modifier
@@ -80,14 +81,12 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                     fontWeight = FontWeight.Medium,
                     color = Color.Black
                 )
-
                 Text(
                     text = "Точные данные - залог\nточных расчетов",
                     fontSize = 20.sp,
                     color = Color.Black
                 )
             }
-
             Spacer(modifier = Modifier.height(48.dp))
 
             // Вес
@@ -101,18 +100,16 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                     modifier = Modifier.align(Alignment.CenterVertically),
                     color = Color.Black
                 )
-
                 Spacer(modifier = Modifier.width(65.dp))
-
                 CustomInputField(
                     value = weight,
                     onValueChange = { newValue ->
                         weight = newValue
-                    }
+                        GlobalParams.weight = newValue.toIntOrNull() ?: 0
+                    },
+                    isValid = isCorrect("weight", weight.toIntOrNull() ?: 0)
                 )
-
                 Spacer(modifier = Modifier.width(10.dp))
-
                 Text(
                     text = "кг",
                     fontSize = 18.sp,
@@ -121,7 +118,6 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                     color = Color.Black
                 )
             }
-
             Spacer(modifier = Modifier.height(18.dp))
 
             // Рост
@@ -135,18 +131,16 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                     modifier = Modifier.align(Alignment.CenterVertically),
                     color = Color.Black
                 )
-
                 Spacer(modifier = Modifier.width(65.dp))
-
                 CustomInputField(
-                    value = height, // Текущее значение
+                    value = height,
                     onValueChange = { newValue ->
-                        height = newValue // Обновляем состояние
-                    }
+                        height = newValue
+                        GlobalParams.height = newValue.toIntOrNull() ?: 0
+                    },
+                    isValid = isCorrect("height", height.toIntOrNull() ?: 0)
                 )
-
                 Spacer(modifier = Modifier.width(10.dp))
-
                 Text(
                     text = "см",
                     fontSize = 18.sp,
@@ -155,7 +149,6 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                     color = Color.Black
                 )
             }
-
             Spacer(modifier = Modifier.height(18.dp))
 
             // Возраст
@@ -169,19 +162,18 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                     modifier = Modifier.align(Alignment.CenterVertically),
                     color = Color.Black
                 )
-
                 Spacer(modifier = Modifier.width(65.dp))
-
                 CustomInputField(
-                    value = age, // Текущее значение
+                    value = age,
                     onValueChange = { newValue ->
-                        age = newValue // Обновляем состояние
-                    }
+                        age = newValue
+                        GlobalParams.age = newValue.toIntOrNull() ?: 0
+                    },
+                    isValid = isCorrect("age", age.toIntOrNull() ?: 0)
                 )
             }
 
             Spacer(Modifier.height(18.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -196,10 +188,7 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                 GenderSelection()
             }
 
-
             Spacer(modifier = Modifier.height(55.dp))
-
-
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -210,26 +199,25 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(modifier = Modifier.fillMaxWidth()) {
                     ActivitySelection()
                 }
             }
 
             Spacer(modifier = Modifier.weight(1f))
-
-
             Button(
                 onClick = {
-                    if (weight.isNotEmpty() && height.isNotEmpty() && age.isNotEmpty()) {
+                    if (isCorrect("weight", weight.toIntOrNull() ?: 0) &&
+                        isCorrect("height", height.toIntOrNull() ?: 0) &&
+                        isCorrect("age", age.toIntOrNull() ?: 0)
+                    ) {
                         onNavigateToHome()
                     }
                 },
                 modifier = Modifier
                     .height(50.dp)
-                    .fillMaxWidth(0.8f)
+                    .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
@@ -241,8 +229,15 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                     text = "Далее",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium,
-                    color = if (weight.isNotEmpty() && height.isNotEmpty() && age.isNotEmpty()) { Color.Black }
-                    else { Color.Gray }
+                    color = if (
+                        isCorrect("weight", weight.toIntOrNull() ?: 0) &&
+                        isCorrect("height", height.toIntOrNull() ?: 0) &&
+                        isCorrect("age", age.toIntOrNull() ?: 0)
+                    ) {
+                        Color.Black
+                    } else {
+                        Color.Gray
+                    }
                 )
             }
         }
@@ -253,18 +248,19 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
 @Composable
 fun CustomInputField(
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    isValid: Boolean
 ) {
-    // Состояние для отслеживания фокуса
     var isFocused by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier.width(150.dp).height(70.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFE4E4E4),
-            contentColor = Color.Black
-        )
+            containerColor =  if (!isValid) Color(0xffFFE8E8) else Color(0xFFE4E4E4),
+            contentColor =  Color.Black
+        ),
+        border = if (!isValid) { BorderStroke(1.5.dp, Color(0xffFF9A9A)) } else { BorderStroke(0.dp, Color(0xFFE4E4E4)) }
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -277,12 +273,12 @@ fun CustomInputField(
                     .fillMaxWidth(0.8f)
                     .height(70.dp)
                     .onFocusChanged { focusState ->
-                        isFocused = focusState.isFocused // Обновляем состояние фокуса
+                        isFocused = focusState.isFocused
                     },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
-                    textAlign = TextAlign.Center, // Курсор и текст по центру
-                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    color = if (!isValid) Color(0xffFF3939) else Color.Black,
                     fontSize = 24.sp
                 ),
                 colors = TextFieldDefaults.colors(
@@ -301,13 +297,13 @@ fun CustomInputField(
                             textAlign = TextAlign.Center
                         )
                     }
+
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }
     }
 }
-
 
 @Composable
 fun GenderSelection() {
@@ -474,6 +470,17 @@ fun ActivitySelection() {
         }
     }
 }
+
+
+fun isCorrect(paramName: String, value: Int): Boolean {
+    return when (paramName) {
+        "weight" -> value in 30..300 || value == 0
+        "height" -> value in 100..250 || value == 0
+        "age" -> value in 14..120 || value == 0
+        else -> false
+    }
+}
+
 
 
 @Composable

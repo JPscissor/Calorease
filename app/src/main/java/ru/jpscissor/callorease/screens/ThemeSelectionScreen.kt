@@ -107,7 +107,7 @@ fun ThemeSelectionScreen(themeManager: ThemeManager, onBack: () -> Unit) {
                     else if (ind == 2) { themeManager.selectedTheme = AppTheme.Dark; onBack() }
                     else if (ind == 3) { themeManager.selectedTheme = AppTheme.Light; onBack() }
                 },
-                modifier = Modifier.height(50.dp).fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
+                modifier = Modifier.height(50.dp).fillMaxWidth().align(Alignment.CenterHorizontally),
                 colors = ButtonColors(
                     containerColor = Color.White,
                     disabledContentColor = Color.White,
@@ -141,7 +141,7 @@ fun DefaultCard(imgRes: Painter, imgRes2: Painter, cardNm: Int) {
             },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors( containerColor = Color(0xffE4E4E4) ),
-        border = if ( ind == cardNm ) { BorderStroke(2.dp, Color.Black) }
+        border = if ( ind == cardNm ) { BorderStroke(2.dp, Color.Gray) }
         else {BorderStroke(0.dp, Color.White)}
     ) {
         Row(

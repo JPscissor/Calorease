@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Яблоко",
+    "calories": 95,
+    "proteins": 0.5,
+    "carbs": 25,
+    "fats": 0.3
+  },
+  {
+    "name": "Куриная грудка",
+    "calories": 165,
+    "proteins": 31,
+    "carbs": 0,
+    "fats": 3.6
+  }
+]

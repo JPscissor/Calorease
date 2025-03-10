@@ -1,8 +1,11 @@
 package ru.jpscissor.callorease.screens
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +38,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -45,67 +48,82 @@ import ru.jpscissor.callorease.screens.GlobalProgress.progressCarbohydrates
 import ru.jpscissor.callorease.screens.GlobalProgress.progressFats
 import ru.jpscissor.callorease.screens.GlobalProgress.progressProteins
 import ru.jpscissor.callorease.screens.GlobalProgress.progressWater
+import ru.jpscissor.callorease.screens.GlobalProgress.secret
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 
 object GlobalProgress {
-    var progressCalories by mutableFloatStateOf(0.18f)
-    var progressProteins by mutableFloatStateOf(0.25f)
-    var progressCarbohydrates by mutableFloatStateOf(0.75f)
-    var progressFats by mutableFloatStateOf(0.09f)
-    var progressWater by mutableFloatStateOf(0.7f)
+    var progressCalories by mutableFloatStateOf(0.0F)
+    var progressProteins by mutableFloatStateOf(0.0F)
+    var progressCarbohydrates by mutableFloatStateOf(0.0F)
+    var progressFats by mutableFloatStateOf(0.0F)
+    var progressWater by mutableFloatStateOf(0.0F)
+
+    var secret by mutableIntStateOf(0)
 }
 
 @Composable
 fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit) {
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
+    if (secret == 1500) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(painter = painterResource(R.drawable.secret), contentDescription = "")
+            Text(
+                text = "УЧИ УРОКИ!",
+                color = MaterialTheme.colorScheme.tertiary,
+                fontSize = 64.sp
+            )
+        }
+    } else {
 
         Column(
             modifier = Modifier
-
-                .padding(horizontal = 20.dp, vertical = 32.dp)
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
         ) {
 
-            //Upper Panel
-            UpperPanel()
+            Column(
+                modifier = Modifier
 
-            Spacer(Modifier.height(20.dp))
+                    .padding(horizontal = 20.dp, vertical = 32.dp)
+            ) {
 
-            //Midle Tiles
-            Tiles()
+                //Upper Panel
+                UpperPanel(onNavigateToProfile)
 
-            Spacer(Modifier.height(38.dp))
+                Spacer(Modifier.height(35.dp))
 
-            //Notes
-            Notes()
+                //Midle Tiles
+                Tiles()
 
+                Spacer(Modifier.height(30.dp))
+
+                //Notes
+                Notes()
+
+            }
+
+            Spacer(Modifier.weight(1f))
+
+            BottomPanel(onNavigateToAdding)
         }
-
-        Spacer(Modifier.weight(1f))
-
-        BottomPanel(onNavigateToAdding)
     }
-
 }
 
 
 @Composable
-fun UpperPanel() {
+fun UpperPanel(click: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Bottom
     ) {
         Image(
             painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.app_icon_black) }
                         else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary) { painterResource(R.drawable.app_icon_green) }
                         else { painterResource(R.drawable.app_icon_black) },
-            modifier = Modifier.width(65.dp),
+            modifier = Modifier.width(65.dp).clickable { secret++ },
             contentDescription = ""
         )
         Spacer(Modifier.width(6.dp))
@@ -114,7 +132,6 @@ fun UpperPanel() {
             "Calorease",
             fontSize = 24.sp,
             fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.tertiary
         )
 
@@ -126,9 +143,12 @@ fun UpperPanel() {
                         else { painterResource(R.drawable.ppl) },
             contentDescription = "",
             modifier = Modifier
-                .width(30.dp)
+                .width(28.dp)
                 .align(Alignment.Bottom)
+                .clickable { click() }
         )
+
+        Spacer(modifier = Modifier.width(8.dp))
 
     }
 }
@@ -383,7 +403,7 @@ fun Counter(element: String, number: String) {
         Text(
             text = number,
             color = MaterialTheme.colorScheme.tertiary,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Medium,
             fontSize = 32.sp
         )
         Text(
@@ -404,7 +424,7 @@ fun SmallCounter(element: String, number: String) {
         Text(
             text = number,
             color = MaterialTheme.colorScheme.tertiary,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Medium,
             fontSize = 20.sp,
             modifier = Modifier.align(Alignment.Start)
         )
@@ -520,7 +540,7 @@ fun BottomPanel(onButtonClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(70.dp)
+            .height(90.dp)
             .background(MaterialTheme.colorScheme.onBackground),
         contentAlignment = Alignment.Center
     ) {
@@ -596,21 +616,23 @@ fun CustomLinearProgressIndicator(
             val canvasWidth = size.width
             val canvasHeight = size.height
 
-
+            // Рисуем фон
             drawRect(
                 color = backgroundColor,
                 topLeft = Offset(0f, 0f),
                 size = Size(canvasWidth, canvasHeight)
             )
 
-
-            drawLine(
-                color = color,
-                start = Offset(0f, canvasHeight / 2),
-                end = Offset(canvasWidth * progress, canvasHeight / 2),
-                strokeWidth = canvasHeight,
-                cap = StrokeCap.Square
-            )
+            // Рисуем прогресс только если он > 0
+            if (progress > 0f) {
+                drawLine(
+                    color = color,
+                    start = Offset(0f, canvasHeight / 2),
+                    end = Offset(canvasWidth * progress, canvasHeight / 2),
+                    strokeWidth = canvasHeight,
+                    cap = StrokeCap.Butt // Используем Butt вместо Square
+                )
+            }
         }
     }
 }
