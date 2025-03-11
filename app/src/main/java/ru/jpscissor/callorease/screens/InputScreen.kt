@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,12 +35,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.jpscissor.callorease.data.saveProfileToJson
 import ru.jpscissor.callorease.screens.GlobalParams.activelvl
 import ru.jpscissor.callorease.screens.GlobalParams.gender
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
@@ -56,6 +59,7 @@ object GlobalParams {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InvalidColorHexValue")
 @Composable
 fun InputScreen(onNavigateToHome: () -> Unit) {
+    val context = LocalContext.current
 
     var weight by remember { mutableStateOf("") }
     var height by remember { mutableStateOf("") }
@@ -212,6 +216,7 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                         isCorrect("height", height.toIntOrNull() ?: 0) &&
                         isCorrect("age", age.toIntOrNull() ?: 0)
                     ) {
+                        saveProfileToJson(context)
                         onNavigateToHome()
                     }
                 },
@@ -396,77 +401,110 @@ fun ActivitySelection() {
         bottomStart = 0.dp
     )
 
-    // Card1
-    Card(
-        Modifier.width(112.dp).height(54.dp),
-        shape = customShape1,
-        colors = CardColors(
-            containerColor = if ( activelvl == 0 ) { Color.Black } else { Color(0xffE4E4E4)},
-            contentColor = Color.Black,
-            disabledContainerColor = Color(0xffE4E4E4),
-            disabledContentColor = Color.Black),
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
 
-        ) {
-        Box (
-            modifier = Modifier.fillMaxSize().clickable { activelvl = 0 },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                "низкий",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                color = if ( activelvl == 0 ) { Color.White } else { Color.Black }
-            )
+        // Card1
+        Card(
+            Modifier.width(112.dp).height(54.dp),
+            shape = customShape1,
+            colors = CardColors(
+                containerColor = if (activelvl == 0) {
+                    Color.Black
+                } else {
+                    Color(0xffE4E4E4)
+                },
+                contentColor = Color.Black,
+                disabledContainerColor = Color(0xffE4E4E4),
+                disabledContentColor = Color.Black
+            ),
+
+            ) {
+            Box(
+                modifier = Modifier.fillMaxSize().clickable { activelvl = 0 },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "низкий",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    color = if (activelvl == 0) {
+                        Color.White
+                    } else {
+                        Color.Black
+                    }
+                )
+            }
         }
-    }
 
-    // Carrd2
-    Card(
-        Modifier.width(112.dp).height(54.dp),
-        colors = CardColors(
-            containerColor = if ( activelvl == 1 ) { Color.Black } else { Color(0xffE4E4E4)},
-            contentColor = Color.Black,
-            disabledContainerColor = Color(0xffE4E4E4),
-            disabledContentColor = Color.Black),
-        shape = customShape3
+        // Carrd2
+        Card(
+            Modifier.width(112.dp).height(54.dp),
+            colors = CardColors(
+                containerColor = if (activelvl == 1) {
+                    Color.Black
+                } else {
+                    Color(0xffE4E4E4)
+                },
+                contentColor = Color.Black,
+                disabledContainerColor = Color(0xffE4E4E4),
+                disabledContentColor = Color.Black
+            ),
+            shape = customShape3
         ) {
-        Box (
-            modifier = Modifier.fillMaxSize().clickable { activelvl = 1 },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                "умеренный",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                color = if ( activelvl == 1 ) { Color.White } else { Color.Black }
-            )
+            Box(
+                modifier = Modifier.fillMaxSize().clickable { activelvl = 1 },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "умеренный",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = if (activelvl == 1) {
+                        Color.White
+                    } else {
+                        Color.Black
+                    }
+                )
+            }
         }
-    }
 
-    // Card3
-    Card(
-        Modifier.width(112.dp).height(54.dp),
-        shape = customShape2,
-        colors = CardColors(
-            containerColor = if ( activelvl == 2 ) { Color.Black } else { Color(0xffE4E4E4)},
-            contentColor = Color.Black,
-            disabledContainerColor = Color(0xffE4E4E4),
-            disabledContentColor = Color.Black),
+        // Card3
+        Card(
+            Modifier.width(112.dp).height(54.dp),
+            shape = customShape2,
+            colors = CardColors(
+                containerColor = if (activelvl == 2) {
+                    Color.Black
+                } else {
+                    Color(0xffE4E4E4)
+                },
+                contentColor = Color.Black,
+                disabledContainerColor = Color(0xffE4E4E4),
+                disabledContentColor = Color.Black
+            ),
 
-        ) {
-        Box (
-            modifier = Modifier.fillMaxSize().clickable { activelvl = 2 },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                "высокий",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                color = if ( activelvl == 2 ) { Color.White } else { Color.Black }
-            )
+            ) {
+            Box(
+                modifier = Modifier.fillMaxSize().clickable { activelvl = 2 },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "высокий",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = if (activelvl == 2) {
+                        Color.White
+                    } else {
+                        Color.Black
+                    }
+                )
+            }
         }
     }
 }

@@ -10,14 +10,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import ru.jpscissor.callorease.R
+import ru.jpscissor.callorease.data.InputViewModel
 import ru.jpscissor.callorease.navigation.NavRoute
 import ru.jpscissor.callorease.ui.theme.AppTheme
 import ru.jpscissor.callorease.ui.theme.CallorEaseTheme
@@ -25,11 +29,12 @@ import ru.jpscissor.callorease.ui.theme.LocalThemeManager
 
 
 @Composable
-fun SplashScreen(onNavigateToOnboard: () -> Unit) {
+fun SplashScreen(onNavigateToOnboard: () -> Unit, onNavigateToHome: () -> Unit, viewModel: InputViewModel) {
+    val profile by viewModel.profile.collectAsState()
 
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(2000)
-        onNavigateToOnboard()
+        if ( profile.height != 0 ) onNavigateToHome() else onNavigateToOnboard()
     }
 
     Box(
@@ -56,10 +61,10 @@ fun SplashScreen(onNavigateToOnboard: () -> Unit) {
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PrevSplashScreen() {
-    CallorEaseTheme {
-        SplashScreen({})
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PrevSplashScreen() {
+//    CallorEaseTheme {
+//        SplashScreen({},{})
+//    }
+//}

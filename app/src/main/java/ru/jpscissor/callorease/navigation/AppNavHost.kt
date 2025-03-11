@@ -46,7 +46,9 @@ fun AppNavHost() {
 
 fun NavGraphBuilder.splashGraph(navController: NavController) {
     composable(NavRoute.Splash.route) {
-        SplashScreen(onNavigateToOnboard = { navController.navigate(NavRoute.Onboard.route) })
+        SplashScreen(onNavigateToOnboard = { navController.navigate(NavRoute.Onboard.route) },
+            onNavigateToHome = {navController.navigate(NavRoute.Home.route)},
+            viewModel())
     }
 
     composable(NavRoute.Onboard.route) {
@@ -75,7 +77,7 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
     }
 
     composable(NavRoute.Profile.route) {
-        ProfileScreen(onNavigateToThemeTest = {
+        ProfileScreen(viewModel(), onNavigateToThemeTest = {
             navController.navigate(NavRoute.Themetest.route)
         })
     }

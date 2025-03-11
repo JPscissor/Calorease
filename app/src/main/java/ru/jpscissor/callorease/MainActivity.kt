@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import ru.jpscissor.callorease.data.loadProfileFromJson
 import ru.jpscissor.callorease.navigation.AppNavHost
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 import ru.jpscissor.callorease.ui.theme.CallorEaseTheme
@@ -24,6 +25,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadProfileFromJson(this)
         enableEdgeToEdge()
 
         setContent {
