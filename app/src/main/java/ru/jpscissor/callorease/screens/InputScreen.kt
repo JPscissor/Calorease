@@ -44,7 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.jpscissor.callorease.data.saveProfileToJson
 import ru.jpscissor.callorease.screens.GlobalParams.activelvl
+import ru.jpscissor.callorease.screens.GlobalParams.age
 import ru.jpscissor.callorease.screens.GlobalParams.gender
+import ru.jpscissor.callorease.screens.GlobalParams.height
+import ru.jpscissor.callorease.screens.GlobalParams.weight
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 
 
@@ -212,9 +215,10 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
-                    if (isCorrect("weight", weight.toIntOrNull() ?: 0) &&
-                        isCorrect("height", height.toIntOrNull() ?: 0) &&
-                        isCorrect("age", age.toIntOrNull() ?: 0)
+                    if (
+                        (GlobalParams.weight != 0) && (GlobalParams.weight in 30..300) &&
+                        GlobalParams.height != 0 && (GlobalParams.height in 100..250) &&
+                        GlobalParams.age != 0 && (GlobalParams.age in 14..120)
                     ) {
                         saveProfileToJson(context)
                         onNavigateToHome()
@@ -235,9 +239,9 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium,
                     color = if (
-                        isCorrect("weight", weight.toIntOrNull() ?: 0) &&
-                        isCorrect("height", height.toIntOrNull() ?: 0) &&
-                        isCorrect("age", age.toIntOrNull() ?: 0)
+                        GlobalParams.weight != 0 &&
+                        GlobalParams.height != 0 &&
+                        GlobalParams.age != 0
                     ) {
                         Color.Black
                     } else {

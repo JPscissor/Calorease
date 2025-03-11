@@ -45,7 +45,7 @@ import ru.jpscissor.callorease.ui.theme.ThemeManager
 
 
 object GlobalIndex {
-    var ind by mutableIntStateOf(0)
+    var ind by mutableIntStateOf(1)
 }
 
 @Composable

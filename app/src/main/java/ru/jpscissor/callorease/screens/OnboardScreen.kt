@@ -43,7 +43,8 @@ fun OnboardScreen(onNavigateToSelect: () -> Unit) {
                 text = "Добро\nпожаловать в",
                 fontWeight = FontWeight.Medium,
                 fontSize = 36.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
             Text(
                 text = "Callorease!",
