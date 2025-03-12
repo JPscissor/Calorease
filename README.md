@@ -37,5 +37,6 @@ Calorease  — это интуитивно понятное приложение
 
 Не стесняйтесь связываться со мной
 📜тг - @JPscissor - https://t.me/JPscissor
+
 Figma дизайн проекта - https://www.figma.com/design/5Lrh9rTF9CsQ7Ql37BTCJ5/Calorease?node-id=0-1&t=4wmnEW5Y8pQlT89a-1
 
