@@ -1,7 +1,5 @@
 package ru.jpscissor.callorease.screens
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -42,7 +41,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.jpscissor.callorease.R
+import ru.jpscissor.callorease.data.InputViewModel
+import ru.jpscissor.callorease.navigation.NavRoute
 import ru.jpscissor.callorease.screens.GlobalProgress.progressCalories
 import ru.jpscissor.callorease.screens.GlobalProgress.progressCarbohydrates
 import ru.jpscissor.callorease.screens.GlobalProgress.progressFats
@@ -61,14 +63,45 @@ object GlobalProgress {
     var secret by mutableIntStateOf(0)
 }
 
+//object DayNorm {
+//    var caloriesDayNorm = 0
+//}
+
+fun SetProteins(calories: Int): Int {
+    return ((calories * 0.3) / 4).toInt()
+}
+
+fun SetCarbohydrates(calories: Int): Int {
+    return ((calories * 0.4) / 4).toInt()
+}
+
+fun SetFats(calories: Int): Int {
+    return ((calories * 0.3) / 9).toInt()
+}
+
+fun SetCalories(weight: Int, height: Int, age: Int, gender: Int, alvl: Int): Int {
+
+    val mod = if (alvl == 0 ) 1.2
+    else if ( alvl == 1 ) 1.55
+    else 1.725
+
+    val cals = if (gender == 0) ( ((10 * weight) + (6.25 * height) - (5 * age) + 5 ) ) * mod
+    else ( (10 * weight) + (6.25 * height) - (5 * age) - 161 ) * mod
+
+    return cals.toInt()
+}
+
 @Composable
-fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit) {
+fun HomeScreen(
+    onNavigateToMenu: () -> Unit,
+    onNavigateToAdding: () -> Unit
+) {
 
     if (secret == 1500) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            Image(painter = painterResource(R.drawable.secret), contentDescription = "")
+            Image(painter = painterResource(R.drawable.mnex), contentDescription = "")
             Text(
                 text = "УЧИ УРОКИ!",
                 color = MaterialTheme.colorScheme.tertiary,
@@ -86,16 +119,16 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToAdding: () -> Unit) 
             Column(
                 modifier = Modifier
 
-                    .padding(horizontal = 20.dp, vertical = 32.dp)
+                    .padding(horizontal = 20.dp, vertical = 36.dp)
             ) {
 
                 //Upper Panel
-                UpperPanel(onNavigateToProfile)
+                UpperPanel(onNavigateToMenu)
 
                 Spacer(Modifier.height(35.dp))
 
                 //Midle Tiles
-                Tiles()
+                Tiles(viewModel())
 
                 Spacer(Modifier.height(30.dp))
 
@@ -155,7 +188,15 @@ fun UpperPanel(click: () -> Unit) {
 
 
 @Composable
-fun Tiles() {
+fun Tiles(viewModel: InputViewModel) {
+    val profile by viewModel.profile.collectAsState()
+    val calories = SetCalories(
+        profile.weight,
+        profile.height,
+        profile.age,
+        profile.gender,
+        profile.activityLevel
+    )
 
     Row(
         modifier = Modifier
@@ -163,7 +204,7 @@ fun Tiles() {
             .height(345.dp)
     ) {
         //Calories
-        Calories()
+        Calories(calories)
 
         Spacer(Modifier.width(12.dp))
 
@@ -172,11 +213,11 @@ fun Tiles() {
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            Proteins() //!
+            Proteins(SetProteins(calories)) //!
             Spacer(Modifier.height(12.dp))
-            Carbohydrates() //!
+            Carbohydrates(SetCarbohydrates(calories)) //!
             Spacer(Modifier.height(12.dp))
-            Fats() //1
+            Fats(SetFats(calories)) //!
 
         }
 
@@ -190,7 +231,7 @@ fun Tiles() {
 
 
 @Composable
-fun Calories() {
+fun Calories(calories: Int) {
 
     Card(
         modifier = Modifier
@@ -223,7 +264,7 @@ fun Calories() {
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Counter("Калорий", "1950")
+                Counter("Калорий", calories.toString())
 
                 Spacer(Modifier.height(35.dp))
 
@@ -242,7 +283,7 @@ fun Calories() {
 
 
 @Composable
-fun Proteins() {
+fun Proteins(proteins: Int) {
 
     Card(
         modifier = Modifier
@@ -275,7 +316,7 @@ fun Proteins() {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                SmallCounter("Белки", "150г")
+                SmallCounter("Белки", proteins.toString())
 
                 Spacer(Modifier.height(15.dp))
 
@@ -293,7 +334,7 @@ fun Proteins() {
 
 
 @Composable
-fun Carbohydrates() {
+fun Carbohydrates(carbohydrates: Int) {
 
     Card(
         modifier = Modifier
@@ -325,7 +366,7 @@ fun Carbohydrates() {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                SmallCounter("Углев.", "45г")
+                SmallCounter("Углев.", carbohydrates.toString())
 
                 Spacer(Modifier.height(15.dp))
 
@@ -343,7 +384,7 @@ fun Carbohydrates() {
 
 
 @Composable
-fun Fats() {
+fun Fats(fats: Int) {
 
     Card(
         modifier = Modifier
@@ -376,7 +417,7 @@ fun Fats() {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                SmallCounter("Жиры", "90г")
+                SmallCounter("Жиры", fats.toString())
 
                 Spacer(Modifier.height(15.dp))
 
@@ -469,7 +510,7 @@ fun WaterCounter() {
                 Spacer(Modifier.width(5.dp))
 
                 Text(
-                    text = "300мл",
+                    text = "0" + "мл",
                     color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
@@ -540,7 +581,7 @@ fun BottomPanel(onButtonClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(90.dp)
+            .height(80.dp)
             .background(MaterialTheme.colorScheme.onBackground),
         contentAlignment = Alignment.Center
     ) {
@@ -638,10 +679,13 @@ fun CustomLinearProgressIndicator(
 }
 
 
+
+
+
 @Composable
 @Preview
 fun PrevHomeScreen() {
     AppThemeWrapper {
-        HomeScreen({},{})
+        HomeScreen({}, {})
     }
 }

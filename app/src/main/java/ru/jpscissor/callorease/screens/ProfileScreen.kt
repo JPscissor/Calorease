@@ -24,7 +24,7 @@ fun ProfileScreen(viewModel: InputViewModel, onNavigateToThemeTest: () -> Unit) 
         Text( text = "Вес: ${profile.weight}", color = MaterialTheme.colorScheme.tertiary )
         Text( text = "Рост: ${profile.height}", color = MaterialTheme.colorScheme.tertiary )
         Text( text = "Возраст: ${profile.age}", color = MaterialTheme.colorScheme.tertiary )
-        Text( text = "Уровень активности: ${if (profile.gender == 0) "НИЗКИЙ" else if (profile.gender == 1) "УМЕРЕННЫЙ" else "ВЫСОКИЙ"}",
+        Text( text = "Уровень активности: ${if (profile.activityLevel == 0) "НИЗКИЙ" else if (profile.activityLevel == 1) "УМЕРЕННЫЙ" else "ВЫСОКИЙ"}",
             color = MaterialTheme.colorScheme.tertiary )
         Text( text = "Пол: ${if (profile.gender == 0) "Мужской" else "Женский"}", color = MaterialTheme.colorScheme.tertiary)
 
