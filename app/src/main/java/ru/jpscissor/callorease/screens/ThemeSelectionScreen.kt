@@ -12,20 +12,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +37,7 @@ import ru.jpscissor.callorease.screens.GlobalIndex.ind
 import ru.jpscissor.callorease.ui.theme.AppTheme
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 import ru.jpscissor.callorease.ui.theme.ThemeManager
+import ru.jpscissor.callorease.ui.theme.currentTheme
 
 
 object GlobalIndex {
@@ -140,9 +136,10 @@ fun DefaultCard(imgRes: Painter, imgRes2: Painter, cardNm: Int) {
                 if (ind != cardNm) { ind = cardNm}
             },
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors( containerColor = Color(0xffE4E4E4) ),
+        colors = CardDefaults.cardColors(
+            containerColor = if (currentTheme() != 1) {Color(0xffE4E4E4)} else Color(0xff535353) ),
         border = if ( ind == cardNm ) { BorderStroke(2.dp, Color.Gray) }
-        else {BorderStroke(0.dp, Color.White)}
+        else {null}
     ) {
         Row(
             modifier = Modifier
@@ -175,31 +172,3 @@ fun PrevTSScreen() {
         )
     }
 }
-
-
-//    Column(
-//        modifier = Modifier.fillMaxSize().padding(16.dp),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        Button(onClick = {
-//            themeManager.selectedTheme = AppTheme.Light
-//            onBack()
-//        }) {
-//            Text("Выбрать светлую тему")
-//        }
-//        Spacer(modifier = Modifier.height(16.dp))
-//        Button(onClick = {
-//            themeManager.selectedTheme = AppTheme.Dark
-//            onBack()
-//        }) {
-//            Text("Выбрать тёмную тему")
-//        }
-//        Spacer(modifier = Modifier.height(16.dp))
-//        Button(onClick = {
-//            themeManager.selectedTheme = AppTheme.Monochrome
-//            onBack()
-//        }) {
-//            Text("Выбрать монохромную тему")
-//        }
-//    }

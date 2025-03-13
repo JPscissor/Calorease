@@ -2,6 +2,7 @@ package ru.jpscissor.callorease.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +32,7 @@ import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 
 @Composable
-fun MenuScreen(onNavigateToProfile: () -> Unit, onNaviagteToThemeSetter: Any) {
+fun MenuScreen(onNavigateToProfile: () -> Unit, onNaviagteToThemeSetter: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
     ) {
@@ -39,28 +40,8 @@ fun MenuScreen(onNavigateToProfile: () -> Unit, onNaviagteToThemeSetter: Any) {
         Column(
             modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 36.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-               Image(
-                   painter = painterResource(R.drawable.arrow),
-                   modifier = Modifier.size(23.dp),
-                   contentDescription = "")
 
-                Spacer(Modifier.weight(1f))
-
-                Text(
-                    text = "Профиль",
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Medium
-                )
-
-                Spacer(Modifier.weight(1f))
-
-                IconButton(onClick = {}, modifier = Modifier.size(23.dp) ) { }
-            }
+            ApperPanel("Профиль")
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -96,7 +77,7 @@ fun MenuScreen(onNavigateToProfile: () -> Unit, onNaviagteToThemeSetter: Any) {
                 Spacer(Modifier.height(15.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth().height(100.dp),
-                    onClick = {},
+                    onClick = { onNaviagteToThemeSetter() },
                     shape = RoundedCornerShape(15.dp),
                     colors = ButtonColors(
                         containerColor = MaterialTheme.colorScheme.onBackground,
@@ -155,6 +136,24 @@ fun MenuScreen(onNavigateToProfile: () -> Unit, onNaviagteToThemeSetter: Any) {
         }
 
 
+    }
+}
+
+
+@Composable
+fun ApperPanel(txt: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+
+        Text(
+            text = txt,
+            fontSize = 36.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.tertiary
+        )
     }
 }
 

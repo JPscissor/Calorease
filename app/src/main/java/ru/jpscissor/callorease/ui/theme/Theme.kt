@@ -8,10 +8,16 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
+import ru.jpscissor.callorease.R
 
 
 enum class AppTheme {
@@ -111,7 +117,22 @@ class ThemeManager(private val context: Context) {
             "Monochrome" -> AppTheme.Monochrome
             else -> AppTheme.Light
         }
-        set(value) = sharedPreferences.edit().putString(SELECTED_THEME_KEY, value.name).apply()
+        set(value) {
+            sharedPreferences.edit().putString(SELECTED_THEME_KEY, value.name).apply()
+            _currentTheme.value = value
+        }
+
+    val _currentTheme: MutableState<AppTheme> = mutableStateOf(selectedTheme)
+    val currentTheme: AppTheme
+        get() = _currentTheme.value
+
+    fun toggleTheme() {
+        selectedTheme = when (selectedTheme) {
+            AppTheme.Light -> AppTheme.Dark
+            AppTheme.Dark -> AppTheme.Monochrome
+            AppTheme.Monochrome -> AppTheme.Light
+        }
+    }
 
     fun getCurrentThemeName(): String {
         return when (selectedTheme) {
@@ -127,7 +148,6 @@ val LocalThemeManager = staticCompositionLocalOf<ThemeManager> {
     error("No ThemeManager provided")
 }
 
-// Функция-обертка для предоставления ThemeManager
 @Composable
 fun ThemeProvider(
     themeManager: ThemeManager,
@@ -142,9 +162,19 @@ fun ThemeProvider(
 @Composable
 fun AppThemeWrapper(content: @Composable () -> Unit) {
     val context = LocalContext.current
-    val themeManager = ThemeManager(context)
+    val themeManager = remember { ThemeManager(context) }
+    val currentTheme by remember { themeManager._currentTheme }
 
-    CallorEaseTheme(appTheme = themeManager.selectedTheme) {
-        content()
+    CallorEaseTheme(appTheme = currentTheme) {
+        ThemeProvider(themeManager) {
+            content()
+        }
     }
+}
+
+@Composable
+fun currentTheme(): Int {
+    if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { return 0 }
+    else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary) { return 1 }
+    else { return 2 }
 }

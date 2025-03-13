@@ -15,6 +15,7 @@ import ru.jpscissor.callorease.screens.OnboardScreen
 import ru.jpscissor.callorease.screens.ProfileScreen
 import ru.jpscissor.callorease.screens.SplashScreen
 import ru.jpscissor.callorease.screens.ThemeSelectionScreen
+import ru.jpscissor.callorease.screens.ThemeSetter
 import ru.jpscissor.callorease.screens.ThemeTestScreen
 import ru.jpscissor.callorease.ui.theme.ThemeManager
 
@@ -107,8 +108,15 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
 
     composable(NavRoute.Menu.route) {
         MenuScreen(
-            onNavigateToProfile = { NavRoute.Menu.route},
-            onNaviagteToThemeSetter = { NavRoute.ThemeSetter.route }
+            onNavigateToProfile = { navController.navigate(NavRoute.Profile.route)},
+            onNaviagteToThemeSetter = { navController.navigate(NavRoute.ThemeSetter.route)}
+        )
+
+    }
+
+    composable(NavRoute.ThemeSetter.route) {
+        ThemeSetter(
+            { navController.navigate(NavRoute.Menu.route)}
         )
 
     }

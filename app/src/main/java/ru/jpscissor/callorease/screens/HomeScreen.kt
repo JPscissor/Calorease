@@ -52,6 +52,7 @@ import ru.jpscissor.callorease.screens.GlobalProgress.progressProteins
 import ru.jpscissor.callorease.screens.GlobalProgress.progressWater
 import ru.jpscissor.callorease.screens.GlobalProgress.secret
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
+import ru.jpscissor.callorease.ui.theme.currentTheme
 
 object GlobalProgress {
     var progressCalories by mutableFloatStateOf(0.0F)
@@ -130,7 +131,7 @@ fun HomeScreen(
                 //Midle Tiles
                 Tiles(viewModel())
 
-                Spacer(Modifier.height(30.dp))
+                Spacer(Modifier.height(16.dp))
 
                 //Notes
                 Notes()
@@ -153,8 +154,8 @@ fun UpperPanel(click: () -> Unit) {
         verticalAlignment = Alignment.Bottom
     ) {
         Image(
-            painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.app_icon_black) }
-                        else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary) { painterResource(R.drawable.app_icon_green) }
+            painter =   if ( currentTheme() == 0 ) { painterResource(R.drawable.app_icon_black) }
+                        else if ( currentTheme() == 1 ) { painterResource(R.drawable.app_icon_green) }
                         else { painterResource(R.drawable.app_icon_black) },
             modifier = Modifier.width(65.dp).clickable { secret++ },
             contentDescription = ""
@@ -171,8 +172,8 @@ fun UpperPanel(click: () -> Unit) {
         Spacer(Modifier.weight(1f))
 
         Image(
-            painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.ppl) }
-                        else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary) { painterResource(R.drawable.ppl_green) }
+            painter =   if ( currentTheme() == 0 ) { painterResource(R.drawable.ppl) }
+                        else if ( currentTheme() == 1 ) { painterResource(R.drawable.ppl_green) }
                         else { painterResource(R.drawable.ppl) },
             contentDescription = "",
             modifier = Modifier
@@ -484,7 +485,7 @@ fun WaterCounter() {
 
     Card(
         modifier = Modifier
-            .height(107.dp)
+            .height(95.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.onBackground ),
         shape = RoundedCornerShape(15.dp)
@@ -493,7 +494,7 @@ fun WaterCounter() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 10.dp),
+                .padding(horizontal = 16.dp, vertical = 4.dp),
         ) {
 
             Row(
@@ -521,11 +522,10 @@ fun WaterCounter() {
                 text = "Вода",
                 color = MaterialTheme.colorScheme.tertiary,
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Medium,
-                modifier =  Modifier.padding(horizontal = 25.dp)
+                fontWeight = FontWeight.Medium
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(16.dp))
 
             CustomLinearProgressIndicator(
                 progress = progressWater,
@@ -545,7 +545,7 @@ fun WaterCounter() {
 fun Notes() {
     Card(
         modifier = Modifier
-            .height(130.dp)
+            .height(150.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.onBackground ),
         shape = RoundedCornerShape(15.dp)
@@ -553,24 +553,55 @@ fun Notes() {
         Row(
             modifier = Modifier.padding(12.dp)
         ) {
-            Image(
-                painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.pencil) }
-                            else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary) { painterResource(R.drawable.pencil_green) }
-                            else { painterResource(R.drawable.pencil) },
-                contentDescription = "",
-                modifier = Modifier.size(30.dp)
+            Text(
+                text = "Завтрак",
+                color = MaterialTheme.colorScheme.tertiary,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 4.dp)
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = "Текст заметки...",
-                color = if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { Color(0xffD2D2D2) }
-                        else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary) { Color(0xff444A3B) }
-                        else { Color(0xffD2D2D2) },
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
+                text = "(769Ккал)",
+                color = MaterialTheme.colorScheme.tertiary,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
                 modifier = Modifier.align(Alignment.CenterVertically)
-                )
+            )
         }
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+        ) {
+            Product("Яблоко", "100г")
+            Product("Банан", "150г")
+            Product("Red Bull", "350г")
+            Product("Рис", "310г")
+        }
+    }
+}
+
+
+
+@Composable
+fun Product(name: String, wght: String) {
+    Row(
+        modifier = Modifier.padding(horizontal = 12.dp)
+    ) {
+        Text(
+            text = name,
+            color = MaterialTheme.colorScheme.tertiary,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Light,
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
+        Spacer(Modifier.weight(1f))
+        Text(
+            text = wght,
+            color = MaterialTheme.colorScheme.tertiary,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
     }
 }
 
@@ -581,7 +612,7 @@ fun BottomPanel(onButtonClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
+            .height(90.dp)
             .background(MaterialTheme.colorScheme.onBackground),
         contentAlignment = Alignment.Center
     ) {
@@ -657,14 +688,12 @@ fun CustomLinearProgressIndicator(
             val canvasWidth = size.width
             val canvasHeight = size.height
 
-            // Рисуем фон
             drawRect(
                 color = backgroundColor,
                 topLeft = Offset(0f, 0f),
                 size = Size(canvasWidth, canvasHeight)
             )
 
-            // Рисуем прогресс только если он > 0
             if (progress > 0f) {
                 drawLine(
                     color = color,
