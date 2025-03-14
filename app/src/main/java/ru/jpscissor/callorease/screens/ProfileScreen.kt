@@ -10,11 +10,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import ru.jpscissor.callorease.data.InputViewModel
 
 @Composable
-fun ProfileScreen(viewModel: InputViewModel, onNavigateToThemeTest: () -> Unit) {
+fun ProfileScreen(viewModel: InputViewModel, onNavigateToThemeTest: () -> Unit, onBack: () -> Unit) {
     val profile by viewModel.profile.collectAsState()
 
     Column(

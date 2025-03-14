@@ -119,8 +119,8 @@ fun HomeScreen(
 
             Column(
                 modifier = Modifier
-
-                    .padding(horizontal = 20.dp, vertical = 36.dp)
+                    .padding(horizontal = 20.dp, vertical = 36.dp),
+                verticalArrangement = Arrangement.Center
             ) {
 
                 //Upper Panel
@@ -618,7 +618,7 @@ fun BottomPanel(onButtonClick: () -> Unit) {
     ) {
         IconButton(
             onClick = onButtonClick,
-            modifier = Modifier.size(55.dp)
+            modifier = Modifier.size(70.dp).align(Alignment.TopCenter).padding(vertical = 8.dp)
         ) {
             Image(
                 painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.plus_button) }

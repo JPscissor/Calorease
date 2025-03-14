@@ -196,6 +196,7 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
             }
 
             Spacer(modifier = Modifier.height(55.dp))
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -269,7 +270,7 @@ fun CustomInputField(
             containerColor =  if (!isValid) Color(0xffFFE8E8) else Color(0xFFE4E4E4),
             contentColor =  Color.Black
         ),
-        border = if (!isValid) { BorderStroke(1.5.dp, Color(0xffFF9A9A)) } else { BorderStroke(0.dp, Color(0xFFE4E4E4)) }
+        border = if (!isValid) { BorderStroke(1.5.dp, Color(0xffFF9A9A)) } else { BorderStroke(1.dp, Color.Black) }
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -298,7 +299,7 @@ fun CustomInputField(
                     unfocusedIndicatorColor = Color.Transparent
                 ),
                 placeholder = {
-                    if (!isFocused && value.isEmpty()) {
+                    if (!isFocused && value.isEmpty() || value.toInt() == 0) {
                         Text(
                             "Введите...",
                             color = Color.LightGray,
@@ -313,6 +314,7 @@ fun CustomInputField(
         }
     }
 }
+
 
 @Composable
 fun GenderSelection() {

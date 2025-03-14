@@ -25,7 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.jpscissor.callorease.R
+ import ru.jpscissor.callorease.ApperPanel
+ import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.screens.GlobalIndex.ind
 import ru.jpscissor.callorease.ui.theme.AppTheme
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
@@ -45,10 +46,10 @@ fun ThemeSetter(onBack: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp,  vertical = 32.dp)
+                .padding(horizontal = 24.dp,  vertical = 36.dp)
         ) {
 
-            ApperPanel("Изменить тему")
+            ApperPanel("Изменить тему", onBack)
 
             Column(
                 modifier = Modifier

@@ -36,6 +36,7 @@ import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.screens.GlobalIndex.ind
 import ru.jpscissor.callorease.ui.theme.AppTheme
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
+import ru.jpscissor.callorease.ui.theme.LocalThemeManager
 import ru.jpscissor.callorease.ui.theme.ThemeManager
 import ru.jpscissor.callorease.ui.theme.currentTheme
 
@@ -45,7 +46,8 @@ object GlobalIndex {
 }
 
 @Composable
-fun ThemeSelectionScreen(themeManager: ThemeManager, onBack: () -> Unit) {
+fun ThemeSelectionScreen(onBack: () -> Unit) {
+    val themeManager = LocalThemeManager.current
 
     Column(
         modifier = Modifier
@@ -167,7 +169,6 @@ fun PrevTSScreen() {
     AppThemeWrapper {
         val themeManager = ThemeManager(LocalContext.current)
         ThemeSelectionScreen(
-            themeManager = themeManager,
             onBack = {  }
         )
     }
