@@ -1,4 +1,4 @@
-package ru.jpscissor.callorease
+package ru.jpscissor.callorease.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.ui.theme.currentTheme
 
 @Composable
@@ -27,7 +28,9 @@ fun ApperPanel(txt: String, nav: () -> Unit) {
         horizontalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = if ( currentTheme() != 1 ) painterResource(R.drawable.arrow) else painterResource(R.drawable.arrow_green),
+            painter = if ( currentTheme() != 1 ) painterResource(R.drawable.arrow) else painterResource(
+                R.drawable.arrow_green
+            ),
             contentDescription = "",
             modifier = Modifier.size(30.dp).clickable { nav() }
         )
