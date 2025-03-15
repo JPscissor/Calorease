@@ -13,6 +13,7 @@ import ru.jpscissor.callorease.screens.MenuScreen
 import ru.jpscissor.callorease.screens.OnboardScreen
 import ru.jpscissor.callorease.screens.ParamsScreen
 import ru.jpscissor.callorease.screens.ProfileScreen
+import ru.jpscissor.callorease.screens.SearchScreen
 import ru.jpscissor.callorease.screens.SplashScreen
 import ru.jpscissor.callorease.screens.ThemeSelectionScreen
 import ru.jpscissor.callorease.screens.ThemeSetter
@@ -28,9 +29,11 @@ sealed class NavRoute (val route: String) {
     object Themetest: NavRoute("themetest_screen")
     object ThemeSelection: NavRoute("themeselection_screen")
     object Menu: NavRoute("menu_screen")
-    object Adding: NavRoute("adding_screen")
     object ThemeSetter: NavRoute("themesetter_screen")
     object Params: NavRoute("params_screen")
+    object Choice: NavRoute("choice_screen")
+    object Search: NavRoute("search_screen")
+    object Adding: NavRoute("adding_screen")
 }
 
 @Composable
@@ -42,6 +45,8 @@ fun AppNavHost() {
         splashGraph(navController)
 
         mainGraph(navController)
+
+        addingGraph(navController)
 
     }
 
@@ -101,7 +106,7 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
     composable(NavRoute.Home.route) {
         HomeScreen(
             onNavigateToMenu = { navController.navigate(NavRoute.Menu.route) },
-            onNavigateToAdding = { navController.navigate(NavRoute.Adding.route) },
+            onNavigateToSearch = { navController.navigate(NavRoute.Search.route) },
         )
     }
 
@@ -161,4 +166,14 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
     composable(NavRoute.Themetest.route) {
         ThemeTestScreen(onBack = {navController.navigate(NavRoute.ThemeSelection.route)})
     }
+}
+
+
+fun NavGraphBuilder.addingGraph(navController: NavController) {
+    composable(NavRoute.Search.route) {
+        SearchScreen(
+            onBack = { navController.navigate(NavRoute.Home.route) }
+        )
+    }
+
 }

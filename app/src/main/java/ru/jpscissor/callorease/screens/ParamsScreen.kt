@@ -52,11 +52,11 @@ fun ParamsScreen(onBack: () -> Unit) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(500.dp),
+                        .height(370.dp),
                     shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.onBackground )
-                ){
+                ) {
                     Column(
                         modifier = Modifier.fillMaxSize().padding(vertical = 16.dp, horizontal = 21.dp),
                         verticalArrangement = Arrangement.Center
@@ -136,29 +136,31 @@ fun ParamsScreen(onBack: () -> Unit) {
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.align(Alignment.CenterVertically),
-                                color = Color.Black
+                                color = MaterialTheme.colorScheme.tertiary
                             )
                             Spacer(Modifier.weight(1f))
                             GenderSelection()
                         }
 
                         Spacer(Modifier.height(24.dp))
+                    }
+                }
 
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Уровень активности",
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color.Black
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                ActivitySelection()
-                            }
-                        }
+                Spacer(Modifier.height(24.dp))
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Уровень активности",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        ActivitySelection()
                     }
                 }
 
@@ -180,7 +182,7 @@ fun ParamsScreen(onBack: () -> Unit) {
                         .fillMaxWidth()
                         .align(Alignment.CenterHorizontally),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
+                        containerColor = MaterialTheme.colorScheme.onBackground,
                         contentColor = Color.Black
                     ),
                     shape = RoundedCornerShape(15.dp)
@@ -194,9 +196,9 @@ fun ParamsScreen(onBack: () -> Unit) {
                             GlobalParams.height != 0 &&
                             GlobalParams.age != 0
                         ) {
-                            Color.Black
+                            MaterialTheme.colorScheme.tertiary
                         } else {
-                            Color.Gray
+                            MaterialTheme.colorScheme.surface
                         }
                     )
                 }

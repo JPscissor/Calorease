@@ -49,6 +49,7 @@ import ru.jpscissor.callorease.screens.GlobalParams.gender
 import ru.jpscissor.callorease.screens.GlobalParams.height
 import ru.jpscissor.callorease.screens.GlobalParams.weight
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
+import ru.jpscissor.callorease.ui.theme.currentTheme
 
 
 object GlobalParams {
@@ -267,10 +268,13 @@ fun CustomInputField(
         modifier = Modifier.width(150.dp).height(70.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor =  if (!isValid) Color(0xffFFE8E8) else Color(0xFFE4E4E4),
+            containerColor =  if (currentTheme() == 1) MaterialTheme.colorScheme.background
+            else if (!isValid) Color(0xffFFE8E8)
+            else Color(0xFFE4E4E4),
             contentColor =  Color.Black
         ),
-        border = if (!isValid) { BorderStroke(1.5.dp, Color(0xffFF9A9A)) } else { BorderStroke(1.dp, Color.Black) }
+        border = if (!isValid) { BorderStroke(1.5.dp, Color(0xffFF9A9A)) }
+        else { BorderStroke(1.dp, MaterialTheme.colorScheme.background) }
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -288,7 +292,9 @@ fun CustomInputField(
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    color = if (!isValid) Color(0xffFF3939) else Color.Black,
+                    color = if (!isValid) Color(0xffFF3939)
+                    else if (currentTheme() == 1) MaterialTheme.colorScheme.tertiary
+                    else Color.Black,
                     fontSize = 24.sp
                 ),
                 colors = TextFieldDefaults.colors(
@@ -299,7 +305,7 @@ fun CustomInputField(
                     unfocusedIndicatorColor = Color.Transparent
                 ),
                 placeholder = {
-                    if (!isFocused && value.isEmpty() || value.toInt() == 0) {
+                    if (!isFocused && value.isEmpty()) {
                         Text(
                             "Введите...",
                             color = Color.LightGray,
@@ -336,10 +342,13 @@ fun GenderSelection() {
         Modifier.width(75.dp).height(70.dp),
         shape = customShape1,
         colors = CardColors(
-            containerColor = if ( gender == 0 ) { Color.Black } else { Color(0xffE4E4E4)},
+            containerColor =
+            if ( gender == 0 ) { if (currentTheme() == 1) MaterialTheme.colorScheme.tertiary else Color.Black }
+            else { if (currentTheme() == 1) MaterialTheme.colorScheme.background else Color(0xffE4E4E4) },
             contentColor = Color.Black,
             disabledContainerColor = Color(0xffE4E4E4),
-            disabledContentColor = Color(0xffE4E4E4))
+            disabledContentColor = Color(0xffE4E4E4)
+        )
 
     ) {
         Box (
@@ -353,7 +362,10 @@ fun GenderSelection() {
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = if ( gender == 0 ) { Color.White } else { Color.Black }
+                color = if ( gender == 0 ) {
+                    if (currentTheme() == 1) MaterialTheme.colorScheme.onBackground
+                    else Color.White }
+                else { if (currentTheme() == 1) MaterialTheme.colorScheme.tertiary else Color.Black }
             )
         }
     }
@@ -362,10 +374,13 @@ fun GenderSelection() {
         Modifier.width(75.dp).height(70.dp),
         shape = customShape2,
         colors = CardColors(
-            containerColor = if ( gender == 1 ) { Color.Black} else { Color(0xffE4E4E4) },
+            containerColor =
+            if ( gender == 1 ) { if (currentTheme() == 1) MaterialTheme.colorScheme.tertiary else Color.Black }
+            else { if (currentTheme() == 1) MaterialTheme.colorScheme.background else Color(0xffE4E4E4) },
             contentColor = Color.Black,
             disabledContainerColor = Color(0xffE4E4E4),
-            disabledContentColor = Color(0xffE4E4E4))
+            disabledContentColor = Color(0xffE4E4E4)
+        )
 
         ) {
         Box (
@@ -379,7 +394,10 @@ fun GenderSelection() {
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = if ( gender == 1 ) { Color.White } else { Color.Black }
+                color = if ( gender == 1 ) {
+                    if (currentTheme() == 1) MaterialTheme.colorScheme.onBackground
+                    else Color.White }
+                else { if (currentTheme() == 1) MaterialTheme.colorScheme.tertiary else Color.Black }
             )
         }
     }
@@ -418,9 +436,9 @@ fun ActivitySelection() {
             shape = customShape1,
             colors = CardColors(
                 containerColor = if (activelvl == 0) {
-                    Color.Black
+                    if (currentTheme() == 1) MaterialTheme.colorScheme.tertiary else Color.Black
                 } else {
-                    Color(0xffE4E4E4)
+                    if(currentTheme() == 1) MaterialTheme.colorScheme.onBackground  else Color(0xffE4E4E4)
                 },
                 contentColor = Color.Black,
                 disabledContainerColor = Color(0xffE4E4E4),
@@ -438,22 +456,22 @@ fun ActivitySelection() {
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center,
                     color = if (activelvl == 0) {
-                        Color.White
+                        if (currentTheme() == 1) MaterialTheme.colorScheme.onBackground else Color.White
                     } else {
-                        Color.Black
-                    }
+                        if(currentTheme() == 1) MaterialTheme.colorScheme.tertiary  else Color.Black
+                    },
                 )
             }
         }
 
-        // Carrd2
+        // Card2
         Card(
             Modifier.width(112.dp).height(54.dp),
             colors = CardColors(
                 containerColor = if (activelvl == 1) {
-                    Color.Black
+                    if (currentTheme() == 1) MaterialTheme.colorScheme.tertiary else Color.Black
                 } else {
-                    Color(0xffE4E4E4)
+                    if(currentTheme() == 1) MaterialTheme.colorScheme.onBackground  else Color(0xffE4E4E4)
                 },
                 contentColor = Color.Black,
                 disabledContainerColor = Color(0xffE4E4E4),
@@ -471,10 +489,10 @@ fun ActivitySelection() {
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     color = if (activelvl == 1) {
-                        Color.White
+                        if (currentTheme() == 1) MaterialTheme.colorScheme.onBackground else Color.White
                     } else {
-                        Color.Black
-                    }
+                        if(currentTheme() == 1) MaterialTheme.colorScheme.tertiary  else Color.Black
+                    },
                 )
             }
         }
@@ -485,9 +503,9 @@ fun ActivitySelection() {
             shape = customShape2,
             colors = CardColors(
                 containerColor = if (activelvl == 2) {
-                    Color.Black
+                    if (currentTheme() == 1) MaterialTheme.colorScheme.tertiary else Color.Black
                 } else {
-                    Color(0xffE4E4E4)
+                    if(currentTheme() == 1) MaterialTheme.colorScheme.onBackground  else Color(0xffE4E4E4)
                 },
                 contentColor = Color.Black,
                 disabledContainerColor = Color(0xffE4E4E4),
@@ -505,10 +523,10 @@ fun ActivitySelection() {
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     color = if (activelvl == 2) {
-                        Color.White
+                        if (currentTheme() == 1) MaterialTheme.colorScheme.onBackground else Color.White
                     } else {
-                        Color.Black
-                    }
+                        if(currentTheme() == 1) MaterialTheme.colorScheme.tertiary  else Color.Black
+                    },
                 )
             }
         }

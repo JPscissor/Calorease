@@ -95,7 +95,7 @@ fun SetCalories(weight: Int, height: Int, age: Int, gender: Int, alvl: Int): Int
 @Composable
 fun HomeScreen(
     onNavigateToMenu: () -> Unit,
-    onNavigateToAdding: () -> Unit
+    onNavigateToSearch: () -> Unit
 ) {
 
     if (secret == 1500) {
@@ -140,7 +140,7 @@ fun HomeScreen(
 
             Spacer(Modifier.weight(1f))
 
-            BottomPanel(onNavigateToAdding)
+            BottomPanel(onNavigateToSearch)
         }
     }
 }
