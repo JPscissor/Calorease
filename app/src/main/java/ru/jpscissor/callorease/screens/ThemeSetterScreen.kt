@@ -39,12 +39,13 @@ fun ThemeSetter(onBack: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .padding(systemPadding())
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp,  vertical = 36.dp)
+                .padding(horizontal = 24.dp,  vertical = 16.dp)
         ) {
 
             ApperPanel("Изменить тему", onBack)

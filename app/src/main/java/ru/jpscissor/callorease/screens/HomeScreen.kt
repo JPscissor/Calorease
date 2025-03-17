@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.data.InputViewModel
-import ru.jpscissor.callorease.navigation.NavRoute
 import ru.jpscissor.callorease.screens.GlobalProgress.progressCalories
 import ru.jpscissor.callorease.screens.GlobalProgress.progressCarbohydrates
 import ru.jpscissor.callorease.screens.GlobalProgress.progressFats
@@ -53,6 +52,7 @@ import ru.jpscissor.callorease.screens.GlobalProgress.progressWater
 import ru.jpscissor.callorease.screens.GlobalProgress.secret
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 import ru.jpscissor.callorease.ui.theme.currentTheme
+
 
 object GlobalProgress {
     var progressCalories by mutableFloatStateOf(0.0F)
@@ -64,16 +64,13 @@ object GlobalProgress {
     var secret by mutableIntStateOf(0)
 }
 
-//object DayNorm {
-//    var caloriesDayNorm = 0
-//}
 
 fun SetProteins(calories: Int): Int {
-    return ((calories * 0.3) / 4).toInt()
+    return ((calories * 0.25) / 4).toInt()
 }
 
 fun SetCarbohydrates(calories: Int): Int {
-    return ((calories * 0.4) / 4).toInt()
+    return ((calories * 0.45) / 4).toInt()
 }
 
 fun SetFats(calories: Int): Int {
@@ -90,6 +87,10 @@ fun SetCalories(weight: Int, height: Int, age: Int, gender: Int, alvl: Int): Int
     else ( (10 * weight) + (6.25 * height) - (5 * age) - 161 ) * mod
 
     return cals.toInt()
+}
+
+fun SetWater(weight: Int): Int {
+    return weight * 30
 }
 
 @Composable
@@ -114,19 +115,20 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(systemPadding())
                 .background(MaterialTheme.colorScheme.background)
         ) {
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 20.dp, vertical = 36.dp),
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
 
                 //Upper Panel
                 UpperPanel(onNavigateToMenu)
 
-                Spacer(Modifier.height(35.dp))
+                Spacer(Modifier.height(30.dp))
 
                 //Midle Tiles
                 Tiles(viewModel())
@@ -198,6 +200,7 @@ fun Tiles(viewModel: InputViewModel) {
         profile.gender,
         profile.activityLevel
     )
+    val water = SetWater(profile.weight)
 
     Row(
         modifier = Modifier
@@ -226,7 +229,7 @@ fun Tiles(viewModel: InputViewModel) {
 
     Spacer(Modifier.height(12.dp))
     //Water
-    WaterCounter()
+    WaterCounter(water.toString())
 
 }
 
@@ -481,7 +484,7 @@ fun SmallCounter(element: String, number: String) {
 
 
 @Composable
-fun WaterCounter() {
+fun WaterCounter(waterlvl: String) {
 
     Card(
         modifier = Modifier
@@ -498,9 +501,14 @@ fun WaterCounter() {
         ) {
 
             Row(
-                modifier = Modifier.align(Alignment.End),
+                modifier = Modifier.align(Alignment.CenterHorizontally),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Image(painter = if (currentTheme() == 1) painterResource(R.drawable.triangle_green)
+                                else painterResource(R.drawable.triangle), contentDescription = "", Modifier.size(8.dp))
+
+                Spacer(Modifier.weight(1f))
+
                 Text(
                     text = "осталось",
                     color = MaterialTheme.colorScheme.tertiary,
@@ -511,12 +519,14 @@ fun WaterCounter() {
                 Spacer(Modifier.width(5.dp))
 
                 Text(
-                    text = "0" + "мл",
+                    text = waterlvl + "мл",
                     color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 )
             }
+
+            Spacer(Modifier.height(4.dp))
 
             Text(
                 text = "Вода",
@@ -525,7 +535,7 @@ fun WaterCounter() {
                 fontWeight = FontWeight.Medium
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(8.dp))
 
             CustomLinearProgressIndicator(
                 progress = progressWater,
@@ -590,16 +600,16 @@ fun Product(name: String, wght: String) {
         Text(
             text = name,
             color = MaterialTheme.colorScheme.tertiary,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Light,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Medium,
             modifier = Modifier.align(Alignment.CenterVertically)
         )
         Spacer(Modifier.weight(1f))
         Text(
             text = wght,
             color = MaterialTheme.colorScheme.tertiary,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Medium,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.SemiBold,
             modifier = Modifier.align(Alignment.CenterVertically)
         )
     }
@@ -618,7 +628,7 @@ fun BottomPanel(onButtonClick: () -> Unit) {
     ) {
         IconButton(
             onClick = onButtonClick,
-            modifier = Modifier.size(70.dp).align(Alignment.TopCenter).padding(vertical = 8.dp)
+            modifier = Modifier.size(60.dp).align(Alignment.Center)
         ) {
             Image(
                 painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.plus_button) }

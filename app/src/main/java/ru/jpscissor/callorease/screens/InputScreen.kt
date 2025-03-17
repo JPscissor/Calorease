@@ -44,10 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.jpscissor.callorease.data.saveProfileToJson
 import ru.jpscissor.callorease.screens.GlobalParams.activelvl
-import ru.jpscissor.callorease.screens.GlobalParams.age
 import ru.jpscissor.callorease.screens.GlobalParams.gender
-import ru.jpscissor.callorease.screens.GlobalParams.height
-import ru.jpscissor.callorease.screens.GlobalParams.weight
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 import ru.jpscissor.callorease.ui.theme.currentTheme
 
@@ -72,12 +69,13 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF4F4F4)) // Фон экрана
+            .background(Color(0xFFF4F4F4))
+            .padding(systemPadding())
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 32.dp)
+                .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             // Заголовок
             Column(
@@ -274,7 +272,7 @@ fun CustomInputField(
             contentColor =  Color.Black
         ),
         border = if (!isValid) { BorderStroke(1.5.dp, Color(0xffFF9A9A)) }
-        else { BorderStroke(1.dp, MaterialTheme.colorScheme.background) }
+        else { BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary) }
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),

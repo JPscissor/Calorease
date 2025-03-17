@@ -17,6 +17,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,15 +39,25 @@ import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 fun ParamsScreen(onBack: () -> Unit) {
     val context = LocalContext.current
 
+    var weight by remember { mutableStateOf("") }
+    var height by remember { mutableStateOf("") }
+    var age by remember { mutableStateOf("") }
+
+    var pass = {}
+
 
     Column(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(systemPadding())
     ) {
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 36.dp)
+            modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-            ApperPanel("Параметры", onBack)
+            ApperPanel("Параметры", if (
+                (GlobalParams.weight != 0) && (GlobalParams.weight in 30..300) &&
+                GlobalParams.height != 0 && (GlobalParams.height in 100..250) &&
+                GlobalParams.age != 0 && (GlobalParams.age in 14..120)
+            ) onBack else pass )
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -74,11 +88,12 @@ fun ParamsScreen(onBack: () -> Unit) {
                         )
                         Spacer(Modifier.weight(1f))
                         CustomInputField(
-                            value = GlobalParams.weight.toString(),
+                            value = weight,
                             onValueChange = { newValue ->
+                                weight = newValue
                                 GlobalParams.weight = newValue.toIntOrNull() ?: 0
                             },
-                            isValid = isCorrect("weight", weight ?: 0)
+                            isValid = isCorrect("weight", weight.toIntOrNull() ?: 0)
                         )
                     }
 
@@ -96,11 +111,12 @@ fun ParamsScreen(onBack: () -> Unit) {
                             )
                             Spacer(Modifier.weight(1f))
                             CustomInputField(
-                                value = GlobalParams.height.toString(),
+                                value = height,
                                 onValueChange = { newValue ->
+                                    height = newValue
                                     GlobalParams.height = newValue.toIntOrNull() ?: 0
                                 },
-                                isValid = isCorrect("height", height ?: 0)
+                                isValid = isCorrect("height", height.toIntOrNull() ?: 0)
                             )
                         }
 
@@ -118,11 +134,12 @@ fun ParamsScreen(onBack: () -> Unit) {
                             )
                             Spacer(Modifier.weight(1f))
                             CustomInputField(
-                                value = GlobalParams.age.toString(),
+                                value = age,
                                 onValueChange = { newValue ->
+                                    age = newValue
                                     GlobalParams.age = newValue.toIntOrNull() ?: 0
                                 },
-                                isValid = isCorrect("age", age ?: 0)
+                                isValid = isCorrect("age", age.toIntOrNull() ?: 0)
                             )
                         }
 

@@ -3,10 +3,14 @@ package ru.jpscissor.callorease.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,4 +50,9 @@ fun ApperPanel(txt: String, nav: () -> Unit) {
 
         Spacer(Modifier.weight(1f))
     }
+}
+
+@Composable
+fun systemPadding(): PaddingValues {
+    return WindowInsets.systemBars.asPaddingValues()
 }

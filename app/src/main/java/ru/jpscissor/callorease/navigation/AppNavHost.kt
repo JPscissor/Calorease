@@ -73,18 +73,8 @@ fun NavGraphBuilder.splashGraph(navController: NavController) {
     composable(NavRoute.Onboard.route) {
         OnboardScreen(
             onNavigateToSelect = {
-                navController.navigate(NavRoute.ThemeSelection.route) {
-                    popUpTo(NavRoute.Onboard.route) { inclusive = true }
-                }
-            }
-        )
-    }
-
-    composable(NavRoute.ThemeSelection.route) {
-        ThemeSelectionScreen(
-            onBack = {
                 navController.navigate(NavRoute.Input.route) {
-                    popUpTo(NavRoute.ThemeSelection.route) { inclusive = true }
+                    popUpTo(NavRoute.Onboard.route) { inclusive = true }
                 }
             }
         )
@@ -93,12 +83,23 @@ fun NavGraphBuilder.splashGraph(navController: NavController) {
     composable(NavRoute.Input.route) {
         InputScreen(
             onNavigateToHome = {
-                navController.navigate(NavRoute.Home.route) {
+                navController.navigate(NavRoute.ThemeSelection.route) {
                     popUpTo(NavRoute.Input.route) { inclusive = true }
                 }
             }
         )
     }
+
+    composable(NavRoute.ThemeSelection.route) {
+        ThemeSelectionScreen(
+            onBack = {
+                navController.navigate(NavRoute.Home.route) {
+                    popUpTo(NavRoute.ThemeSelection.route) { inclusive = true }
+                }
+            }
+        )
+    }
+
 }
 
 
