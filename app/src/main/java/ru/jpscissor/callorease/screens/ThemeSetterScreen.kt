@@ -39,7 +39,7 @@ fun ThemeSetter(onBack: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(systemPadding())
+            .padding(systemPaddingWithoutBottom())
     ) {
 
         Column(

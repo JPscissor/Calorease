@@ -115,7 +115,7 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(systemPadding())
+                .padding(systemPaddingWithoutBottom())
                 .background(MaterialTheme.colorScheme.background)
         ) {
 
@@ -128,9 +128,9 @@ fun HomeScreen(
                 //Upper Panel
                 UpperPanel(onNavigateToMenu)
 
-                Spacer(Modifier.height(30.dp))
+                Spacer(Modifier.height(16.dp))
 
-                //Midle Tiles
+                //Middle Tiles
                 Tiles(viewModel())
 
                 Spacer(Modifier.height(16.dp))
@@ -146,6 +146,9 @@ fun HomeScreen(
         }
     }
 }
+
+@Composable
+private fun paddingValues() = systemPadding()
 
 
 @Composable
@@ -710,15 +713,12 @@ fun CustomLinearProgressIndicator(
                     start = Offset(0f, canvasHeight / 2),
                     end = Offset(canvasWidth * progress, canvasHeight / 2),
                     strokeWidth = canvasHeight,
-                    cap = StrokeCap.Butt // Используем Butt вместо Square
+                    cap = StrokeCap.Butt
                 )
             }
         }
     }
 }
-
-
-
 
 
 @Composable

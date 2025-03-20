@@ -47,7 +47,9 @@ fun ParamsScreen(onBack: () -> Unit) {
 
 
     Column(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(systemPadding())
+        modifier = Modifier.fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(systemPaddingWithoutBottom())
     ) {
 
         Column(

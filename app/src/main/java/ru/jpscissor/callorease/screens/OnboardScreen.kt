@@ -29,7 +29,9 @@ import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 fun OnboardScreen(onNavigateToSelect: () -> Unit) {
 
     Column(
-        modifier = Modifier.fillMaxSize().background(Color(0xffF4F4F4)).padding(32.dp),
+        modifier = Modifier.fillMaxSize()
+            .background(Color(0xffF4F4F4))
+            .padding(systemPaddingWithoutBottom()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

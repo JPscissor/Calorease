@@ -70,7 +70,7 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF4F4F4))
-            .padding(systemPadding())
+            .padding(systemPaddingWithoutBottom())
     ) {
         Column(
             modifier = Modifier

@@ -53,7 +53,7 @@ fun ThemeSelectionScreen(onBack: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xffF4F4F4))
-            .padding(systemPadding())
+            .padding(systemPaddingWithoutBottom())
     ) {
 
         Column(

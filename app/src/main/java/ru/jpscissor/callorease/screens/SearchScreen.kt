@@ -2,8 +2,8 @@ package ru.jpscissor.callorease.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,15 +29,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
+import ru.jpscissor.callorease.ui.theme.currentTheme
 
 @Composable
-fun SearchScreen(onBack: () -> Unit) {
+fun SearchScreen(onBack: () -> Unit, onProductSelect: () -> Unit) {
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF4F4F4))
-            .padding(systemPadding())
+            .background(MaterialTheme.colorScheme.background)
+            .padding(systemPaddingWithoutBottom())
     ) {
         Column(
             modifier = Modifier
@@ -64,7 +65,7 @@ fun SearchScreen(onBack: () -> Unit) {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Image(
-                            painter = painterResource(R.drawable.search),
+                            painter = if (currentTheme() == 1) painterResource(R.drawable.search_green) else painterResource(R.drawable.search),
                             modifier = Modifier.size(25.dp),
                             contentDescription = ""
                         )
@@ -101,7 +102,7 @@ fun SearchScreen(onBack: () -> Unit) {
                     Column(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        BigProduct("Red Bull", 349)
+                        BigProduct("Red Bull", 349, onProductSelect)
                     }
 
                 }
@@ -124,9 +125,9 @@ fun SearchScreen(onBack: () -> Unit) {
 
 
 @Composable
-fun BigProduct(name: String, weight: Int) {
+fun BigProduct(name: String, weight: Int, onSelect: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(16.dp)
+        modifier = Modifier.fillMaxWidth().padding(16.dp).clickable { onSelect()}
     ) {
         Text(
             name,
@@ -149,6 +150,6 @@ fun BigProduct(name: String, weight: Int) {
 @Composable
 fun PrevSearchScreen () {
     AppThemeWrapper {
-        SearchScreen({})
+        SearchScreen({}, {})
     }
 }

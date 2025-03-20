@@ -35,7 +35,7 @@ fun MenuScreen(onNavigateToParams: () -> Unit, onNavigateToThemeSetter: () -> Un
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(systemPadding())
+            .padding(systemPaddingWithoutBottom())
     ) {
 
         Column(

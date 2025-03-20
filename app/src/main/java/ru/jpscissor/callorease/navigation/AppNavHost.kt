@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ru.jpscissor.callorease.screens.AddingScreen
 import ru.jpscissor.callorease.screens.HomeScreen
 import ru.jpscissor.callorease.screens.InputScreen
 import ru.jpscissor.callorease.screens.MenuScreen
@@ -31,7 +32,6 @@ sealed class NavRoute (val route: String) {
     object Menu: NavRoute("menu_screen")
     object ThemeSetter: NavRoute("themesetter_screen")
     object Params: NavRoute("params_screen")
-    object Choice: NavRoute("choice_screen")
     object Search: NavRoute("search_screen")
     object Adding: NavRoute("adding_screen")
 }
@@ -162,19 +162,30 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
             }
         )
     }
-
-
-    composable(NavRoute.Themetest.route) {
-        ThemeTestScreen(onBack = {navController.navigate(NavRoute.ThemeSelection.route)})
-    }
 }
 
 
 fun NavGraphBuilder.addingGraph(navController: NavController) {
     composable(NavRoute.Search.route) {
         SearchScreen(
-            onBack = { navController.navigate(NavRoute.Home.route) }
+            onBack = { navController.navigate(NavRoute.Home.route) {
+                popUpTo(NavRoute.Search.route) { inclusive = true }
+            }
+                     },
+            onProductSelect = { navController.navigate(NavRoute.Adding.route) }
         )
+    }
+
+    composable(NavRoute.Adding.route) {
+       AddingScreen(
+           onBack = { navController.navigate(NavRoute.Search.route){
+               popUpTo(NavRoute.Adding.route) { inclusive = true }
+                }
+           },
+           onComplete = { navController.navigate(NavRoute.Home.route){
+               popUpTo(NavRoute.Adding.route) { inclusive = true } }
+           }
+       )
     }
 
 }
