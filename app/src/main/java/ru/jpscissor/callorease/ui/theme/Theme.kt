@@ -41,7 +41,8 @@ private val MonochromeColorScheme = lightColorScheme(
     secondary = Color(0xffD2D2D2),
     onSecondary = Color(0xFF1C1C1C),
 
-    tertiary = Color(0xFF1C1C1C)
+    tertiary = Color(0xFF1C1C1C),
+    onTertiary = Color.White
 )
 
 private val DarkColorScheme = darkColorScheme(
@@ -60,7 +61,8 @@ private val DarkColorScheme = darkColorScheme(
     secondary = Color(0xff444A3B),
     onSecondary = Color(0xffBDF168),
 
-    tertiary = Color(0xffBDF168)
+    tertiary = Color(0xffBDF168),
+    onTertiary = Color.Black
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -79,7 +81,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = Color(0xffDCF2FF),
     onSecondary = Color(0xff6FC8FF),
 
-    tertiary = Color(0xFF1C1C1C)
+    tertiary = Color(0xFF1C1C1C),
+    onTertiary = Color.White
 )
 
 

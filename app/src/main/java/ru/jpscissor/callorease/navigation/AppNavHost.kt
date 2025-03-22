@@ -19,6 +19,9 @@ import ru.jpscissor.callorease.screens.SplashScreen
 import ru.jpscissor.callorease.screens.ThemeSelectionScreen
 import ru.jpscissor.callorease.screens.ThemeSetter
 import ru.jpscissor.callorease.screens.ThemeTestScreen
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 
 
 sealed class NavRoute (val route: String) {

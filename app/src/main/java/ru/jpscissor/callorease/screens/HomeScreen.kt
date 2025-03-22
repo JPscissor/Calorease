@@ -17,16 +17,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,10 +45,12 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.data.InputViewModel
@@ -50,6 +60,7 @@ import ru.jpscissor.callorease.screens.GlobalProgress.progressFats
 import ru.jpscissor.callorease.screens.GlobalProgress.progressProteins
 import ru.jpscissor.callorease.screens.GlobalProgress.progressWater
 import ru.jpscissor.callorease.screens.GlobalProgress.secret
+import ru.jpscissor.callorease.screens.GlobalProgress.todayWater
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 import ru.jpscissor.callorease.ui.theme.currentTheme
 
@@ -62,22 +73,26 @@ object GlobalProgress {
     var progressWater by mutableFloatStateOf(0.0F)
 
     var secret by mutableIntStateOf(0)
+
+    var isDialogVisible by mutableStateOf(false)
+
+    var todayWater by mutableFloatStateOf(0.0F)
 }
 
 
-fun SetProteins(calories: Int): Int {
+fun setProteins(calories: Int): Int {
     return ((calories * 0.25) / 4).toInt()
 }
 
-fun SetCarbohydrates(calories: Int): Int {
+fun setCarbohydrates(calories: Int): Int {
     return ((calories * 0.45) / 4).toInt()
 }
 
-fun SetFats(calories: Int): Int {
+fun setFats(calories: Int): Int {
     return ((calories * 0.3) / 9).toInt()
 }
 
-fun SetCalories(weight: Int, height: Int, age: Int, gender: Int, alvl: Int): Int {
+fun setCalories(weight: Int, height: Int, age: Int, gender: Int, alvl: Int): Int {
 
     val mod = if (alvl == 0 ) 1.2
     else if ( alvl == 1 ) 1.55
@@ -89,7 +104,7 @@ fun SetCalories(weight: Int, height: Int, age: Int, gender: Int, alvl: Int): Int
     return cals.toInt()
 }
 
-fun SetWater(weight: Int): Int {
+fun setWater(weight: Int): Int {
     return weight * 30
 }
 
@@ -98,19 +113,6 @@ fun HomeScreen(
     onNavigateToMenu: () -> Unit,
     onNavigateToSearch: () -> Unit
 ) {
-
-    if (secret == 1500) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Image(painter = painterResource(R.drawable.mnex), contentDescription = "")
-            Text(
-                text = "УЧИ УРОКИ!",
-                color = MaterialTheme.colorScheme.tertiary,
-                fontSize = 64.sp
-            )
-        }
-    } else {
 
         Column(
             modifier = Modifier
@@ -144,6 +146,14 @@ fun HomeScreen(
 
             BottomPanel(onNavigateToSearch)
         }
+
+    if (GlobalProgress.isDialogVisible) {
+        WaterDialog(
+            onDismiss = { GlobalProgress.isDialogVisible = false },
+            onConfirm = { waterAmount ->
+                todayWater += waterAmount
+            }
+        )
     }
 }
 
@@ -196,14 +206,17 @@ fun UpperPanel(click: () -> Unit) {
 @Composable
 fun Tiles(viewModel: InputViewModel) {
     val profile by viewModel.profile.collectAsState()
-    val calories = SetCalories(
+    val calories = setCalories(
         profile.weight,
         profile.height,
         profile.age,
         profile.gender,
         profile.activityLevel
     )
-    val water = SetWater(profile.weight)
+
+    val water = setWater(profile.weight)
+    if ((todayWater / (water * 0.01) / 100).toFloat() >= 1.0) {GlobalProgress.progressWater = 1.0F }
+    else {progressWater = (todayWater / (water * 0.01) / 100).toFloat()}
 
     Row(
         modifier = Modifier
@@ -220,11 +233,11 @@ fun Tiles(viewModel: InputViewModel) {
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            Proteins(SetProteins(calories)) //!
+            Proteins(setProteins(calories)) //!
             Spacer(Modifier.height(12.dp))
-            Carbohydrates(SetCarbohydrates(calories)) //!
+            Carbohydrates(setCarbohydrates(calories)) //!
             Spacer(Modifier.height(12.dp))
-            Fats(SetFats(calories)) //!
+            Fats(setFats(calories)) //!
 
         }
 
@@ -492,6 +505,7 @@ fun WaterCounter(waterlvl: String) {
     Card(
         modifier = Modifier
             .height(95.dp)
+            .clickable { GlobalProgress.isDialogVisible = true }
             .fillMaxWidth(),
         colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.onBackground ),
         shape = RoundedCornerShape(15.dp)
@@ -513,7 +527,9 @@ fun WaterCounter(waterlvl: String) {
                 Spacer(Modifier.weight(1f))
 
                 Text(
-                    text = "осталось",
+                    text = if ((waterlvl.toInt() - todayWater.toInt()) >= 0 ) {
+                        "осталось" }
+                    else {"завершено!"},
                     color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
@@ -522,7 +538,9 @@ fun WaterCounter(waterlvl: String) {
                 Spacer(Modifier.width(5.dp))
 
                 Text(
-                    text = waterlvl + "мл",
+                    text = if ((waterlvl.toInt() - todayWater.toInt()) >= 0 ) {
+                        (waterlvl.toInt() - todayWater.toInt()).toString() + "мл" }
+                    else {""},
                     color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
@@ -715,6 +733,75 @@ fun CustomLinearProgressIndicator(
                     strokeWidth = canvasHeight,
                     cap = StrokeCap.Butt
                 )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun WaterDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    var waterInput by remember { mutableStateOf("") }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Добавление воды",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TextField(
+                    value = waterInput,
+                    onValueChange = { newValue ->
+                        waterInput = newValue.filter { it.isDigit() } // Разрешаем только цифры
+                    },
+                    label = { Text("Количество (мл)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text("Отмена", color = MaterialTheme.colorScheme.tertiary)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = {
+                            val waterAmount = waterInput.toIntOrNull() ?: 0
+                            onConfirm(waterAmount)
+                            onDismiss()
+                        },
+                        enabled = waterInput.isNotEmpty(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            disabledContainerColor = MaterialTheme.colorScheme.secondary,
+                            disabledContentColor = MaterialTheme.colorScheme.onSecondary
+                        )
+                    ) {
+                        Text("Добавить")
+                    }
+                }
             }
         }
     }
