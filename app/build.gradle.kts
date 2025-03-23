@@ -61,4 +61,7 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
 }

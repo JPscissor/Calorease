@@ -4,6 +4,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -110,6 +111,7 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
         HomeScreen(
             onNavigateToMenu = { navController.navigate(NavRoute.Menu.route) },
             onNavigateToSearch = { navController.navigate(NavRoute.Search.route) },
+            context = LocalContext.current
         )
     }
 
@@ -161,7 +163,8 @@ fun NavGraphBuilder.addingGraph(navController: NavController) {
             onBack = {
                 navController.popBackStack()
             },
-            onProductSelect = { navController.navigate(NavRoute.Adding.route) }
+            onProductSelect = { navController.navigate(NavRoute.Adding.route) },
+            context = LocalContext.current
         )
     }
 

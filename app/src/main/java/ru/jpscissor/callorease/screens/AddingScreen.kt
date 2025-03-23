@@ -1,5 +1,6 @@
 package ru.jpscissor.callorease.screens
 
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,18 +32,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.jpscissor.callorease.data.Product
+import ru.jpscissor.callorease.data.addConsumedProduct
+import ru.jpscissor.callorease.data.initializeConsumedProductsFile
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 import ru.jpscissor.callorease.ui.theme.currentTheme
 
 @Composable
 fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
     var pweight by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -55,7 +62,7 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
                 .fillMaxSize()
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-            ApperPanel("Продукт", onBack)
+            ApperPanel( CurrentProduct.name, onBack)
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -105,7 +112,7 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
                             )
                             Spacer(Modifier.weight(1f))
                             Text(
-                                text = "0,0",
+                                text = CurrentProduct.prot.toString(),
                                 color = MaterialTheme.colorScheme.tertiary,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.SemiBold
@@ -125,7 +132,7 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
                             )
                             Spacer(Modifier.weight(1f))
                             Text(
-                                text = "0,0",
+                                text = CurrentProduct.carb.toString(),
                                 color = MaterialTheme.colorScheme.tertiary,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.SemiBold
@@ -145,7 +152,7 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
                             )
                             Spacer(Modifier.weight(1f))
                             Text(
-                                text = "0,0",
+                                text = CurrentProduct.fat.toString(),
                                 color = MaterialTheme.colorScheme.tertiary,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.SemiBold
@@ -217,8 +224,11 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
 
                         Spacer(Modifier.weight(1f))
 
+                        val cls = weightToCals(weight = if( pweight.isEmpty() ) { 0 } else { pweight.toInt() },
+                            cals = CurrentProduct.cal
+                        )
                         Text(
-                            text = "0",
+                            text = cls.toString(),
                             color = MaterialTheme.colorScheme.tertiary,
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Medium
@@ -229,7 +239,21 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
                 Spacer(Modifier.weight(1f))
 
                 Button(
-                    onClick = if ( pweight > 0.toString()) {onComplete} else {{}},
+                    onClick = {
+                        val weightValue = pweight.toIntOrNull()
+                        if (weightValue != null && weightValue > 0) {
+                            AddProduct(
+                                context = context,
+                                weight = weightValue,
+                                name = CurrentProduct.name,
+                                calories = CurrentProduct.cal,
+                                proteins = CurrentProduct.prot,
+                                fats = CurrentProduct.fat,
+                                carbs = CurrentProduct.carb
+                            )
+                            onComplete()
+                        }
+                    },
                     modifier = Modifier
                         .height(50.dp)
                         .fillMaxWidth()
@@ -316,6 +340,26 @@ fun CustomInputField2(
             )
         }
     }
+}
+
+
+fun weightToCals(weight: Int, cals: Double): String {
+    val result = weight * (cals / 100)
+    return "%.1f".format(result)
+}
+
+
+
+fun AddProduct(context: Context, weight: Int, name: String, calories: Double, proteins: Double, fats: Double, carbs: Double) {
+    addConsumedProduct(
+        context = context,
+        grams = weight,
+        name = name,
+        calories = calories,
+        proteins = proteins,
+        fats = fats,
+        carbs = carbs
+    )
 }
 
 

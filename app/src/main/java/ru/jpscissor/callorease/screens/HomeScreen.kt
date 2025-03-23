@@ -1,5 +1,7 @@
 package ru.jpscissor.callorease.screens
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,9 +27,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -45,11 +45,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,6 +57,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.data.InputViewModel
+import ru.jpscissor.callorease.data.WaterData
+import ru.jpscissor.callorease.data.loadAndCalculateTotals
+import ru.jpscissor.callorease.data.saveWaterToFile
 import ru.jpscissor.callorease.screens.GlobalProgress.progressCalories
 import ru.jpscissor.callorease.screens.GlobalProgress.progressCarbohydrates
 import ru.jpscissor.callorease.screens.GlobalProgress.progressFats
@@ -64,8 +67,8 @@ import ru.jpscissor.callorease.screens.GlobalProgress.progressProteins
 import ru.jpscissor.callorease.screens.GlobalProgress.progressWater
 import ru.jpscissor.callorease.screens.GlobalProgress.secret
 import ru.jpscissor.callorease.screens.GlobalProgress.todayWater
-import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 import ru.jpscissor.callorease.ui.theme.currentTheme
+import java.time.LocalDate
 
 
 object GlobalProgress {
@@ -97,9 +100,9 @@ fun setFats(calories: Int): Int {
 
 fun setCalories(weight: Int, height: Int, age: Int, gender: Int, alvl: Int): Int {
 
-    val mod = if (alvl == 0 ) 1.2
-    else if ( alvl == 1 ) 1.55
-    else 1.725
+    val mod = if (alvl == 0 ) 1.1
+    else if ( alvl == 1 ) 1.45
+    else 1.6
 
     val cals = if (gender == 0) ( ((10 * weight) + (6.25 * height) - (5 * age) + 5 ) ) * mod
     else ( (10 * weight) + (6.25 * height) - (5 * age) - 161 ) * mod
@@ -114,7 +117,8 @@ fun setWater(weight: Int): Int {
 @Composable
 fun HomeScreen(
     onNavigateToMenu: () -> Unit,
-    onNavigateToSearch: () -> Unit
+    onNavigateToSearch: () -> Unit,
+    context: Context
 ) {
 
         Column(
@@ -136,7 +140,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(16.dp))
 
                 //Middle Tiles
-                Tiles(viewModel())
+                Tiles(viewModel(), context = context)
 
                 Spacer(Modifier.height(16.dp))
 
@@ -154,7 +158,16 @@ fun HomeScreen(
         WaterDialog(
             onDismiss = { GlobalProgress.isDialogVisible = false },
             onConfirm = { waterAmount ->
-                todayWater += waterAmount
+                val today = LocalDate.now().toString()
+
+
+                GlobalProgress.todayWater += waterAmount
+
+                saveWaterToFile(
+                    context,
+                    "water.json",
+                    WaterData(consumedDate = today, waterAmount = todayWater)
+                )
             }
         )
     }
@@ -207,7 +220,7 @@ fun UpperPanel(click: () -> Unit) {
 
 
 @Composable
-fun Tiles(viewModel: InputViewModel) {
+fun Tiles(viewModel: InputViewModel, context: Context) {
     val profile by viewModel.profile.collectAsState()
     val calories = setCalories(
         profile.weight,
@@ -216,6 +229,38 @@ fun Tiles(viewModel: InputViewModel) {
         profile.gender,
         profile.activityLevel
     )
+
+    val totals = remember {
+        loadAndCalculateTotals(context, "consumed.json")
+    }
+    val consumedCalories = totals["calories"] ?: 0.0
+    val consumedProteins = totals["proteins"] ?: 0.0
+    val consumedCarbs= totals["carbohydrates"] ?: 0.0
+    val consumedFats = totals["fats"] ?: 0.0
+
+
+////    if (calories > 0) {
+////        GlobalProgress.progressCalories = ((consumedCalories / calories) * 100).toFloat().coerceIn(0.0F, 100.0F)
+////    }
+//
+//    // Обновление прогресса белков
+//    val proteinsNorm = setProteins(calories)
+//    if (proteinsNorm > 0) {
+//        GlobalProgress.progressProteins = ((consumedProteins / proteinsNorm) * 100).toFloat().coerceIn(0.0F, 100.0F)
+//    }
+//
+//    // Обновление прогресса углеводов
+//    val carbsNorm = setCarbohydrates(calories)
+//    if (carbsNorm > 0) {
+//        GlobalProgress.progressCarbohydrates = ((consumedCarbs / carbsNorm) * 100).toFloat().coerceIn(0.0F, 100.0F)
+//    }
+//
+//    // Обновление прогресса жиров
+//    val fatsNorm = setFats(calories)
+//    if (fatsNorm > 0) {
+//        GlobalProgress.progressFats = ((consumedFats / fatsNorm) * 100).toFloat().coerceIn(0.0F, 100.0F)
+//    }
+
 
     val water = setWater(profile.weight)
     if ((todayWater / (water * 0.01) / 100).toFloat() >= 1.0) {GlobalProgress.progressWater = 1.0F }
@@ -227,7 +272,9 @@ fun Tiles(viewModel: InputViewModel) {
             .height(345.dp)
     ) {
         //Calories
-        Calories(calories)
+        val caloriesToView = calories-consumedCalories
+        Calories(caloriesToView)
+        GlobalProgress.progressCalories = ((consumedCalories / calories.toFloat())).toFloat().coerceIn(0.0F, 1.0F)
 
         Spacer(Modifier.width(12.dp))
 
@@ -236,11 +283,18 @@ fun Tiles(viewModel: InputViewModel) {
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            Proteins(setProteins(calories)) //!
+            val proteinsToView = setProteins(calories)-consumedProteins
+            Proteins(proteinsToView) //!
+            GlobalProgress.progressProteins = ((consumedProteins / setProteins(calories).toFloat())).toFloat().coerceIn(0.0F, 1.0F)
+
             Spacer(Modifier.height(12.dp))
-            Carbohydrates(setCarbohydrates(calories)) //!
+
+            Carbohydrates(setCarbohydrates(calories)-consumedCarbs) //!
+            GlobalProgress.progressCarbohydrates = ((consumedCarbs / setCarbohydrates(calories).toFloat())).toFloat().coerceIn(0.0F, 1.0F)
+
             Spacer(Modifier.height(12.dp))
-            Fats(setFats(calories)) //!
+            Fats(setFats(calories)-consumedFats) //!
+            GlobalProgress.progressFats = ((consumedFats / setFats(calories).toFloat())).toFloat().coerceIn(0.0F, 1.0F)
 
         }
 
@@ -254,7 +308,10 @@ fun Tiles(viewModel: InputViewModel) {
 
 
 @Composable
-fun Calories(calories: Int) {
+fun Calories(calories: Double) {
+    var cals = calories
+    if (calories < 0) { cals = 0.0 }
+
 
     Card(
         modifier = Modifier
@@ -287,12 +344,22 @@ fun Calories(calories: Int) {
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Counter("Калорий", calories.toString())
+                if (cals.toInt() != 0) Counter("Калорий", (cals.toInt()).toString())
+                else {
+                    Text(
+                        text = "Калории",
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 24.sp
+                        )
+                }
+
 
                 Spacer(Modifier.height(35.dp))
 
                 Text(
-                    "осталось",
+                    text = if (cals.toInt() != 0) {"осталось"}
+                    else {"Завершено!"},
                     color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp
@@ -306,7 +373,9 @@ fun Calories(calories: Int) {
 
 
 @Composable
-fun Proteins(proteins: Int) {
+fun Proteins(proteins: Double) {
+    var prots = proteins
+    if (prots < 0) { prots = 0.0 }
 
     Card(
         modifier = Modifier
@@ -339,15 +408,26 @@ fun Proteins(proteins: Int) {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                SmallCounter("Белки", proteins.toString())
+                if (prots.toInt() != 0 ) {SmallCounter("Белки", (prots.toInt()).toString())}
+                else {
+                    Text(
+                    text = "Белки",
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp
+                    )
+                }
+
 
                 Spacer(Modifier.height(15.dp))
 
                 Text(
-                    "осталось",
+                    text = if (prots.toInt() != 0) {"осталось"}
+                    else {"Завершено!"},
                     color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp
+                    fontSize = if (prots.toInt() != 0) {13.sp}
+                    else {10.sp}
                 )
             }
         }
@@ -357,7 +437,9 @@ fun Proteins(proteins: Int) {
 
 
 @Composable
-fun Carbohydrates(carbohydrates: Int) {
+fun Carbohydrates(carbohydrates: Double) {
+    var carbs = carbohydrates
+    if (carbs < 0) { carbs = 0.0 }
 
     Card(
         modifier = Modifier
@@ -389,15 +471,25 @@ fun Carbohydrates(carbohydrates: Int) {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                SmallCounter("Углев.", carbohydrates.toString())
+                if (carbs.toInt() != 0 ) {SmallCounter("Углев.", (carbs.toInt()).toString())}
+                else {
+                    Text(
+                        text = "Углев.",
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp
+                    )
+                }
 
                 Spacer(Modifier.height(15.dp))
 
                 Text(
-                    "осталось",
+                    text = if (carbs.toInt() != 0) {"осталось"}
+                    else {"Завершено!"},
                     color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp
+                    fontSize = if (carbs.toInt() != 0) {13.sp}
+                    else {10.sp}
                 )
             }
         }
@@ -407,7 +499,9 @@ fun Carbohydrates(carbohydrates: Int) {
 
 
 @Composable
-fun Fats(fats: Int) {
+fun Fats(fats: Double) {
+    var fat = fats
+    if (fat < 0) { fat = 0.0 }
 
     Card(
         modifier = Modifier
@@ -440,15 +534,25 @@ fun Fats(fats: Int) {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                SmallCounter("Жиры", fats.toString())
+                if (fat.toInt() != 0 ) {SmallCounter("Жиры", (fat.toInt()).toString())}
+                else {
+                    Text(
+                        text = "Жиры",
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp
+                    )
+                }
 
                 Spacer(Modifier.height(15.dp))
 
                 Text(
-                    "осталось",
+                    text = if (fat.toInt() != 0) {"осталось"}
+                    else {"Завершено!"},
                     color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp
+                    fontSize = if (fat.toInt() != 0) {13.sp}
+                    else {10.sp}
                 )
             }
         }
@@ -504,6 +608,8 @@ fun SmallCounter(element: String, number: String) {
 
 @Composable
 fun WaterCounter(waterlvl: String) {
+    val todayWater = GlobalProgress.todayWater
+    val remainingWater = waterlvl.toInt() - todayWater.toInt()
 
     Card(
         modifier = Modifier
@@ -541,9 +647,7 @@ fun WaterCounter(waterlvl: String) {
                 Spacer(Modifier.width(5.dp))
 
                 Text(
-                    text = if ((waterlvl.toInt() - todayWater.toInt()) >= 0 ) {
-                        (waterlvl.toInt() - todayWater.toInt()).toString() + "мл" }
-                    else {""},
+                    text = if (remainingWater >= 0) "${remainingWater}мл" else "",
                     color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
@@ -847,10 +951,10 @@ fun WaterDialog(
 
 
 
-@Composable
-@Preview
-fun PrevHomeScreen() {
-    AppThemeWrapper {
-        HomeScreen({}, {})
-    }
-}
+//@Composable
+//@Preview
+//fun PrevHomeScreen() {
+//    AppThemeWrapper {
+//        HomeScreen({}, {})
+//    }
+//}
