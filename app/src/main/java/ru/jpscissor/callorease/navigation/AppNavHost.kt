@@ -107,14 +107,20 @@ fun NavGraphBuilder.splashGraph(navController: NavController) {
 
 
 fun NavGraphBuilder.mainGraph(navController: NavController) {
-    composable(NavRoute.Home.route) {
+    composable(NavRoute.Home.route,
+        enterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(300)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(300)) }
+        ) {
         HomeScreen(
             onNavigateToMenu = { navController.navigate(NavRoute.Menu.route) },
             onNavigateToSearch = { navController.navigate(NavRoute.Search.route) },
         )
     }
 
-    composable(NavRoute.Menu.route) {
+    composable(NavRoute.Menu.route,
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
+        ) {
         MenuScreen(
             onNavigateToParams = { navController.navigate(NavRoute.Params.route)},
             onNavigateToThemeSetter = { navController.navigate(NavRoute.ThemeSetter.route)},
@@ -128,7 +134,10 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
     }
 
 
-    composable(NavRoute.Params.route) {
+    composable(NavRoute.Params.route,
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
+        ) {
         ParamsScreen (
             onBack = {
                 navController.navigate(NavRoute.Menu.route) {
@@ -150,26 +159,14 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
         )
 
     }
-
-
-    composable(NavRoute.Profile.route) {
-        ProfileScreen(
-            viewModel(),
-            onNavigateToThemeTest = {
-            navController.navigate(NavRoute.Themetest.route)
-            },
-            onBack = {
-                navController.navigate(NavRoute.Menu.route) {
-                    popUpTo(NavRoute.Profile.route) { inclusive = true }
-                }
-            }
-        )
-    }
 }
 
 
 fun NavGraphBuilder.addingGraph(navController: NavController) {
-    composable(NavRoute.Search.route) {
+    composable(NavRoute.Search.route,
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
+        ) {
         SearchScreen(
             onBack = { navController.navigate(NavRoute.Home.route) {
                 popUpTo(NavRoute.Search.route) { inclusive = true }
@@ -179,7 +176,10 @@ fun NavGraphBuilder.addingGraph(navController: NavController) {
         )
     }
 
-    composable(NavRoute.Adding.route) {
+    composable(NavRoute.Adding.route,
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
+        ) {
        AddingScreen(
            onBack = { navController.navigate(NavRoute.Search.route){
                popUpTo(NavRoute.Adding.route) { inclusive = true }

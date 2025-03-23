@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -46,6 +48,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -745,6 +748,8 @@ fun WaterDialog(
     onConfirm: (Int) -> Unit
 ) {
     var waterInput by remember { mutableStateOf("") }
+    var isFocused by remember { mutableStateOf(false) }
+    val isValid = waterInput.toIntOrNull() != null && waterInput.toIntOrNull()!! > 0
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -769,43 +774,77 @@ fun WaterDialog(
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
                     value = waterInput,
+                    shape = RoundedCornerShape(15.dp),
                     onValueChange = { newValue ->
                         waterInput = newValue.filter { it.isDigit() } // Разрешаем только цифры
                     },
-                    label = { Text("Количество (мл)") },
+
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onFocusChanged { focusState -> isFocused = focusState.isFocused },
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(
+                        textAlign = TextAlign.Center,
+                        color = if (!isValid) Color.Red else MaterialTheme.colorScheme.tertiary,
+                        fontSize = 24.sp
+                    ),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.onBackground,
+                        cursorColor = MaterialTheme.colorScheme.tertiary,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    placeholder = {
+                        if (!isFocused && waterInput.isEmpty()) {
+                            Text(
+                                "Введите...",
+                                color = MaterialTheme.colorScheme.tertiary,
+                                fontSize = 15.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
-                    horizontalArrangement = Arrangement.End,
+                    horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(onClick = onDismiss) {
+                    Button(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.secondary)
+                        ) {
                         Text("Отмена", color = MaterialTheme.colorScheme.tertiary)
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         onClick = {
                             val waterAmount = waterInput.toIntOrNull() ?: 0
-                            onConfirm(waterAmount)
-                            onDismiss()
+                            if (waterAmount > 0) {
+                                onConfirm(waterAmount)
+                                onDismiss()
+                            }
                         },
-                        enabled = waterInput.isNotEmpty(),
+                        enabled = isValid,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            disabledContainerColor = MaterialTheme.colorScheme.secondary,
-                            disabledContentColor = MaterialTheme.colorScheme.onSecondary
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.secondary,
+                            disabledContentColor = MaterialTheme.colorScheme.secondary,
+                            disabledContainerColor = MaterialTheme.colorScheme.secondary
                         )
                     ) {
-                        Text("Добавить")
+                        Text("Добавить", color = MaterialTheme.colorScheme.tertiary)
                     }
                 }
             }
         }
     }
 }
+
 
 
 @Composable
