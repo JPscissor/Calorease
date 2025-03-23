@@ -31,16 +31,17 @@ fun OnboardScreen(onNavigateToSelect: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize()
             .background(Color(0xffF4F4F4))
-            .padding(systemPaddingWithoutBottom()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(systemPaddingWithoutBottom())
     ) {
-        Spacer(Modifier.height(128.dp))
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxSize()
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Spacer(Modifier.weight(0.4f))
             Text(
                 text = "Добро\nпожаловать в",
                 fontWeight = FontWeight.Medium,
@@ -52,30 +53,28 @@ fun OnboardScreen(onNavigateToSelect: () -> Unit) {
                 text = "Callorease!",
                 color = Color(0xffBDF168),
                 fontSize = 36.sp,
-                fontWeight = FontWeight.Medium
-            )
-        }
-
-        Spacer(Modifier.weight(1f))
-
-        Button(
-            onClick = { onNavigateToSelect() },
-            modifier = Modifier
-                .height(46.dp)
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color.Black
-            ),
-            shape = RoundedCornerShape(15.dp)
-        ) {
-            Text(
-                text = "Начать",
-                fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color.Black
             )
+            Spacer(Modifier.weight(1f))
+            Button(
+                onClick = { onNavigateToSelect() },
+                modifier = Modifier
+                    .height(46.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
+                shape = RoundedCornerShape(15.dp)
+            ) {
+                Text(
+                    text = "Начать",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
+            }
         }
     }
 

@@ -1,5 +1,8 @@
 package ru.jpscissor.callorease.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -13,15 +16,10 @@ import ru.jpscissor.callorease.screens.InputScreen
 import ru.jpscissor.callorease.screens.MenuScreen
 import ru.jpscissor.callorease.screens.OnboardScreen
 import ru.jpscissor.callorease.screens.ParamsScreen
-import ru.jpscissor.callorease.screens.ProfileScreen
 import ru.jpscissor.callorease.screens.SearchScreen
 import ru.jpscissor.callorease.screens.SplashScreen
 import ru.jpscissor.callorease.screens.ThemeSelectionScreen
 import ru.jpscissor.callorease.screens.ThemeSetter
-import ru.jpscissor.callorease.screens.ThemeTestScreen
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 
 
 sealed class NavRoute (val route: String) {
@@ -107,9 +105,7 @@ fun NavGraphBuilder.splashGraph(navController: NavController) {
 
 
 fun NavGraphBuilder.mainGraph(navController: NavController) {
-    composable(NavRoute.Home.route,
-        enterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(300)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(300)) }
+    composable(NavRoute.Home.route
         ) {
         HomeScreen(
             onNavigateToMenu = { navController.navigate(NavRoute.Menu.route) },
@@ -118,16 +114,13 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
     }
 
     composable(NavRoute.Menu.route,
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
+        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }
         ) {
         MenuScreen(
             onNavigateToParams = { navController.navigate(NavRoute.Params.route)},
             onNavigateToThemeSetter = { navController.navigate(NavRoute.ThemeSetter.route)},
             onBack = {
-                navController.navigate(NavRoute.Home.route) {
-                    popUpTo(NavRoute.Menu.route) { inclusive = true }
-                }
+                navController.popBackStack()
             }
         )
 
@@ -135,26 +128,23 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
 
 
     composable(NavRoute.Params.route,
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(250)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }
         ) {
         ParamsScreen (
             onBack = {
-                navController.navigate(NavRoute.Menu.route) {
-                    popUpTo(NavRoute.Params.route) { inclusive = true }
-                }
+                navController.popBackStack()
             }
         )
 
     }
 
-
-    composable(NavRoute.ThemeSetter.route) {
+    composable(NavRoute.ThemeSetter.route,
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(250)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }) {
         ThemeSetter(
             onBack = {
-                navController.navigate(NavRoute.Menu.route) {
-                    popUpTo(NavRoute.ThemeSetter.route) { inclusive = true }
-                }
+                navController.popBackStack()
             }
         )
 
@@ -162,28 +152,26 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
 }
 
 
+
 fun NavGraphBuilder.addingGraph(navController: NavController) {
     composable(NavRoute.Search.route,
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
+        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }
         ) {
         SearchScreen(
-            onBack = { navController.navigate(NavRoute.Home.route) {
-                popUpTo(NavRoute.Search.route) { inclusive = true }
-            }
-                     },
+            onBack = {
+                navController.popBackStack()
+            },
             onProductSelect = { navController.navigate(NavRoute.Adding.route) }
         )
     }
 
     composable(NavRoute.Adding.route,
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300)) }
+        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(250)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }
         ) {
        AddingScreen(
-           onBack = { navController.navigate(NavRoute.Search.route){
-               popUpTo(NavRoute.Adding.route) { inclusive = true }
-                }
+           onBack = {
+               navController.popBackStack()
            },
            onComplete = { navController.navigate(NavRoute.Home.route){
                popUpTo(NavRoute.Adding.route) { inclusive = true } }
