@@ -12,7 +12,6 @@ class InputViewModel(application: Application) : AndroidViewModel(application) {
     private val _profile = MutableStateFlow(UserProfile())
     val profile: StateFlow<UserProfile> = _profile
 
-    // Обновление полей профиля
     fun updateProfileField(field: String, value: Int) {
         _profile.value = when (field) {
             "gender" -> _profile.value.copy(gender = value)
@@ -24,14 +23,14 @@ class InputViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // Сохранение профиля в JSON
+
     fun saveProfile() {
         viewModelScope.launch {
             storage.writeToFile("profile.json", _profile.value, UserProfile.serializer())
         }
     }
 
-    // Загрузка профиля из JSON
+
     init {
         viewModelScope.launch {
             _profile.value = storage.readFromFile("profile.json", UserProfile.serializer()) ?: _profile.value

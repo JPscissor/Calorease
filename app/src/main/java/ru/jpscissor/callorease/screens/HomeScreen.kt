@@ -60,6 +60,8 @@ import ru.jpscissor.callorease.data.InputViewModel
 import ru.jpscissor.callorease.data.WaterData
 import ru.jpscissor.callorease.data.loadAndCalculateTotals
 import ru.jpscissor.callorease.data.saveWaterToFile
+import ru.jpscissor.callorease.screens.GlobalProgress.globCalories
+import ru.jpscissor.callorease.screens.GlobalProgress.globWater
 import ru.jpscissor.callorease.screens.GlobalProgress.progressCalories
 import ru.jpscissor.callorease.screens.GlobalProgress.progressCarbohydrates
 import ru.jpscissor.callorease.screens.GlobalProgress.progressFats
@@ -83,6 +85,10 @@ object GlobalProgress {
     var isDialogVisible by mutableStateOf(false)
 
     var todayWater by mutableFloatStateOf(0.0F)
+
+    var globCalories by mutableIntStateOf(0)
+
+    var globWater by mutableIntStateOf(0)
 }
 
 
@@ -173,9 +179,6 @@ fun HomeScreen(
     }
 }
 
-@Composable
-private fun paddingValues() = systemPadding()
-
 
 @Composable
 fun UpperPanel(click: () -> Unit) {
@@ -222,13 +225,16 @@ fun UpperPanel(click: () -> Unit) {
 @Composable
 fun Tiles(viewModel: InputViewModel, context: Context) {
     val profile by viewModel.profile.collectAsState()
-    val calories = setCalories(
-        profile.weight,
-        profile.height,
-        profile.age,
-        profile.gender,
-        profile.activityLevel
+
+    globCalories = setCalories(
+        GlobalParams.weight,
+        GlobalParams.height,
+        GlobalParams.age,
+        GlobalParams.gender,
+        GlobalParams.activelvl
     )
+
+    globWater = setWater(GlobalParams.weight)
 
     val totals = remember {
         loadAndCalculateTotals(context, "consumed.json")
@@ -262,9 +268,8 @@ fun Tiles(viewModel: InputViewModel, context: Context) {
 //    }
 
 
-    val water = setWater(profile.weight)
-    if ((todayWater / (water * 0.01) / 100).toFloat() >= 1.0) {GlobalProgress.progressWater = 1.0F }
-    else {progressWater = (todayWater / (water * 0.01) / 100).toFloat()}
+    if ((todayWater / (globWater * 0.01) / 100).toFloat() >= 1.0) {GlobalProgress.progressWater = 1.0F }
+    else {progressWater = (todayWater / (globWater * 0.01) / 100).toFloat()}
 
     Row(
         modifier = Modifier
@@ -272,9 +277,9 @@ fun Tiles(viewModel: InputViewModel, context: Context) {
             .height(345.dp)
     ) {
         //Calories
-        val caloriesToView = calories-consumedCalories
+        val caloriesToView = globCalories-consumedCalories
         Calories(caloriesToView)
-        GlobalProgress.progressCalories = ((consumedCalories / calories.toFloat())).toFloat().coerceIn(0.0F, 1.0F)
+        GlobalProgress.progressCalories = ((consumedCalories / globCalories.toFloat())).toFloat().coerceIn(0.0F, 1.0F)
 
         Spacer(Modifier.width(12.dp))
 
@@ -283,18 +288,18 @@ fun Tiles(viewModel: InputViewModel, context: Context) {
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            val proteinsToView = setProteins(calories)-consumedProteins
+            val proteinsToView = setProteins(globCalories)-consumedProteins
             Proteins(proteinsToView) //!
-            GlobalProgress.progressProteins = ((consumedProteins / setProteins(calories).toFloat())).toFloat().coerceIn(0.0F, 1.0F)
+            GlobalProgress.progressProteins = ((consumedProteins / setProteins(globCalories).toFloat())).toFloat().coerceIn(0.0F, 1.0F)
 
             Spacer(Modifier.height(12.dp))
 
-            Carbohydrates(setCarbohydrates(calories)-consumedCarbs) //!
-            GlobalProgress.progressCarbohydrates = ((consumedCarbs / setCarbohydrates(calories).toFloat())).toFloat().coerceIn(0.0F, 1.0F)
+            Carbohydrates(setCarbohydrates(globCalories)-consumedCarbs) //!
+            GlobalProgress.progressCarbohydrates = ((consumedCarbs / setCarbohydrates(globCalories).toFloat())).toFloat().coerceIn(0.0F, 1.0F)
 
             Spacer(Modifier.height(12.dp))
-            Fats(setFats(calories)-consumedFats) //!
-            GlobalProgress.progressFats = ((consumedFats / setFats(calories).toFloat())).toFloat().coerceIn(0.0F, 1.0F)
+            Fats(setFats(globCalories)-consumedFats) //!
+            GlobalProgress.progressFats = ((consumedFats / setFats(globCalories).toFloat())).toFloat().coerceIn(0.0F, 1.0F)
 
         }
 
@@ -302,7 +307,7 @@ fun Tiles(viewModel: InputViewModel, context: Context) {
 
     Spacer(Modifier.height(12.dp))
     //Water
-    WaterCounter(water.toString())
+    WaterCounter(globWater.toString())
 
 }
 

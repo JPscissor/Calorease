@@ -29,10 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.jpscissor.callorease.data.loadProfileFromJson
 import ru.jpscissor.callorease.data.saveProfileToJson
-import ru.jpscissor.callorease.screens.GlobalParams.age
-import ru.jpscissor.callorease.screens.GlobalParams.height
-import ru.jpscissor.callorease.screens.GlobalParams.weight
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 
 @Composable
@@ -193,6 +191,7 @@ fun ParamsScreen(onBack: () -> Unit) {
                             GlobalParams.age != 0 && (GlobalParams.age in 14..120)
                         ) {
                             saveProfileToJson(context)
+                            loadProfileFromJson(context)
                             onBack()
                         }
                     },
