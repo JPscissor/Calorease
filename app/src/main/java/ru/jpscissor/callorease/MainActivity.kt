@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //Пища
         try {
             Log.d("onCreate", "Loading profile from JSON")
             loadProfileFromJson(this)
@@ -57,15 +58,18 @@ class MainActivity : ComponentActivity() {
             Log.e("onCreate", "Error during initialization", e)
         }
 
+        //Вода
         try {
-            if (fileExistsInInternalStorage(this, "water.json")){
-            Log.d("onCreate", "Checking if water.json exists")
-            migrateOldWaterData(this, "water.json")
-            }
-            else {
+            if (fileExistsInInternalStorage(this, "water.json")) {
+                Log.d("onCreate", "Checking if water.json exists")
+                migrateOldWaterData(this, "water.json")
+            } else {
+                Log.d("onCreate", "Initializing water.json")
                 initializeWaterFile(this, "water.json")
             }
 
+
+            clearOldWater(this, "water.json")
         } catch (e: Exception) {
             Log.e("onCreate", "Error during initialization", e)
         }

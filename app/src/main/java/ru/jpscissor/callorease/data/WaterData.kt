@@ -66,9 +66,7 @@ fun migrateOldWaterData(context: Context, filename: String) {
         val jsonString = context.openFileInput(filename).bufferedReader().use { it.readText() }
         Log.d("MigrateWater", "Loaded old water data: $jsonString")
 
-
         val oldData = Json.decodeFromString<WaterData>(jsonString)
-
 
         if (oldData.consumedDate.isEmpty()) {
             val updatedData = oldData.copy(consumedDate = LocalDate.now().toString())
