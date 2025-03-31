@@ -10,7 +10,7 @@ import java.time.LocalDate
 
 @Serializable
 data class WaterData(
-    val consumedDate: String = LocalDate.now().toString(),
+    val consumedDate: String,
     val waterAmount: Float = 0.0F
 )
 
@@ -25,14 +25,25 @@ fun saveWaterToFile(context: Context, filename: String, waterData: WaterData) {
     }
 }
 
+
 fun loadWaterFromFile(context: Context, filename: String): WaterData {
     return try {
         val jsonString = context.openFileInput(filename).bufferedReader().use { it.readText() }
         Log.d("FileLoad", "Loaded JSON: $jsonString")
-        Json.decodeFromString<WaterData>(jsonString)
+
+        val waterData = Json.decodeFromString<WaterData>(jsonString)
+
+        if (waterData.consumedDate.isEmpty()) {
+            waterData.copy(consumedDate = LocalDate.now().toString())
+        } else {
+            waterData
+        }
     } catch (e: Exception) {
         Log.e("FileLoad", "Error loading file", e)
-        WaterData() // Возвращаем пустые данные по умолчанию
+        WaterData(
+            consumedDate = LocalDate.now().toString(),
+            waterAmount = 0.0F
+        )
     }
 }
 
@@ -47,19 +58,17 @@ fun clearOldWater(context: Context, filename: String) {
     if (waterData.consumedDate != today) {
         Log.d("ClearOldWater", "Resetting water counter for new day")
 
-
         val updatedWaterData = WaterData(consumedDate = today, waterAmount = 0.0F)
         saveWaterToFile(context, filename, updatedWaterData)
-
 
         GlobalProgress.todayWater = 0.0F
     } else {
         Log.d("ClearOldWater", "Water data is up-to-date")
 
-
         GlobalProgress.todayWater = waterData.waterAmount
     }
 }
+
 
 fun migrateOldWaterData(context: Context, filename: String) {
     try {
@@ -80,12 +89,16 @@ fun migrateOldWaterData(context: Context, filename: String) {
     }
 }
 
+
 fun initializeWaterFile(context: Context, filename: String) {
     Log.d("FileInit", "Initializing file: $filename")
     try {
         if (!fileExistsInInternalStorage(context, filename)) {
             Log.d("FileInit", "File does not exist. Creating a new one.")
-            val initialData = WaterData(consumedDate = LocalDate.now().toString(), waterAmount = 0.0F)
+            val initialData = WaterData(
+                consumedDate = LocalDate.now().toString(),
+                waterAmount = 0.0F
+            )
             saveWaterToFile(context, filename, initialData)
         } else {
             Log.d("FileInit", "File already exists.")

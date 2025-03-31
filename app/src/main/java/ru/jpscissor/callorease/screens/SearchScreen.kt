@@ -116,7 +116,7 @@ fun SearchScreen(onBack: () -> Unit, onProductSelect: () -> Unit, context: Conte
                                         Spacer(Modifier.weight(0.8f))
                                         Text(
                                             "Поиск",
-                                            color = Color.LightGray,
+                                            color = MaterialTheme.colorScheme.tertiary,
                                             fontSize = 20.sp,
                                             textAlign = TextAlign.Start
                                         )
@@ -210,8 +210,8 @@ fun ItemInSearch(name: String, cals: Int, onSelect: () -> Unit) {
         Spacer(Modifier.weight(1f))
         Text(
             "Ккал: $cals",
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            fontSize = 14.sp,
             color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Start
         )

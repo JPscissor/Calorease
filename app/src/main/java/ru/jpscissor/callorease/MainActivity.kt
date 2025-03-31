@@ -60,15 +60,16 @@ class MainActivity : ComponentActivity() {
 
         //Вода
         try {
+            Log.d("onCreate", "Checking if water.json exists")
             if (fileExistsInInternalStorage(this, "water.json")) {
-                Log.d("onCreate", "Checking if water.json exists")
+                Log.d("onCreate", "Migrating old water data")
                 migrateOldWaterData(this, "water.json")
             } else {
                 Log.d("onCreate", "Initializing water.json")
                 initializeWaterFile(this, "water.json")
             }
 
-
+            // Загружаем данные
             clearOldWater(this, "water.json")
         } catch (e: Exception) {
             Log.e("onCreate", "Error during initialization", e)
