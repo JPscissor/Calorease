@@ -697,7 +697,7 @@ fun Notes() {
             modifier = Modifier.padding(12.dp)
         ) {
             Text(
-                text = "Завтрак",
+                text = dayPhase(),
                 color = MaterialTheme.colorScheme.tertiary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -705,7 +705,7 @@ fun Notes() {
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = "(769Ккал)",
+                text = "(0Ккал)",
                 color = MaterialTheme.colorScheme.tertiary,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Normal,
@@ -713,13 +713,26 @@ fun Notes() {
             )
         }
         Column(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Product("Яблоко", "100г")
-            Product("Банан", "150г")
-            Product("Red Bull", "350г")
-            Product("Рис", "310г")
+            Text(
+                text = "Здесь пока ничего нет :(",
+                color = MaterialTheme.colorScheme.tertiary,
+
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+            )
         }
+//        Column(
+//            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+//        ) {
+//            Product("Яблоко", "100г")
+//            Product("Банан", "150г")
+//            Product("Red Bull", "350г")
+//            Product("Рис", "310г")
+//        }
     }
 }
 
