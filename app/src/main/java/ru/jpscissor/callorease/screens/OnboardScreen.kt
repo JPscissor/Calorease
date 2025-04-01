@@ -37,7 +37,7 @@ fun OnboardScreen(onNavigateToSelect: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+                .padding(end = 24.dp, start = 24.dp, top = 16.dp, bottom = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

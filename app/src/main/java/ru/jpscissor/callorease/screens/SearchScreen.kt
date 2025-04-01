@@ -27,7 +27,9 @@ import android.content.Context
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
+import ru.jpscissor.callorease.data.ConsumedProduct
 import ru.jpscissor.callorease.data.Product
+import ru.jpscissor.callorease.data.getLast10Products
 import ru.jpscissor.callorease.data.loadConsumedProductsFromFile
 import ru.jpscissor.callorease.screens.CurrentProduct.cal
 import ru.jpscissor.callorease.screens.CurrentProduct.carb
@@ -43,6 +45,7 @@ object CurrentProduct{
     var cal by mutableDoubleStateOf(0.1)
 }
 
+
 @Composable
 fun SearchScreen(onBack: () -> Unit, onProductSelect: () -> Unit, context: Context) {
     var query by remember { mutableStateOf("") }
@@ -51,8 +54,11 @@ fun SearchScreen(onBack: () -> Unit, onProductSelect: () -> Unit, context: Conte
 
     var isFocused by remember { mutableStateOf(false) }
 
-
-//    val recentProducts = remember { loadConsumedProductsFromFile(context, "recent_products.json").take(10) }
+    val recentProducts by remember {
+        derivedStateOf {
+            getLast10Products(context, "consumed.json")
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -132,6 +138,7 @@ fun SearchScreen(onBack: () -> Unit, onProductSelect: () -> Unit, context: Conte
 
                 Spacer(Modifier.height(24.dp))
 
+
                 // Недавние продукты или результаты поиска
                 if (query.isEmpty()) {
                     Text(
@@ -150,18 +157,14 @@ fun SearchScreen(onBack: () -> Unit, onProductSelect: () -> Unit, context: Conte
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground),
                         shape = RoundedCornerShape(15.dp)
                     ) {
-//                        LazyColumn(modifier = Modifier.fillMaxSize()) {
-//                            items(recentProducts) { consumedProduct ->
-////                                BigProduct(
-////                                    name = consumedProduct.product.name,
-////                                    weight = consumedProduct.amount.toInt()
-////                                ) {
-//////                                    currentProductUpdate(consumedProduct)
-////                                    onProductSelect()
-////                                }
-//                            }
-//                        }
+
+                        LazyColumn(Modifier.fillMaxSize()) {
+                            items(recentProducts) { product ->
+                                BigProduct(product = product) {onProductSelect(); currentProductUpdate(product)}
+                            }
+                        }
                     }
+
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.8f)) {
                         items(foundProducts) { product ->
@@ -225,7 +228,7 @@ fun searchProducts(query: String, products: List<Product>): List<Product> {
 }
 
 @Composable
-fun BigProduct(name: String, weight: Int, onSelect: () -> Unit) {
+fun BigProduct(product: ConsumedProduct, onSelect: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -233,16 +236,17 @@ fun BigProduct(name: String, weight: Int, onSelect: () -> Unit) {
             .clickable { onSelect() }
     ) {
         Text(
-            name,
+            text = product.productName,
             fontWeight = FontWeight.Medium,
-            fontSize = 15.sp,
-            color = MaterialTheme.colorScheme.tertiary
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier.width(250.dp)
         )
         Spacer(Modifier.weight(1f))
         Text(
-            "$weight г",
+            "${product.grams} г",
             fontWeight = FontWeight.SemiBold,
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             color = MaterialTheme.colorScheme.tertiary
         )
     }
@@ -256,6 +260,17 @@ fun currentProductUpdate(product: Product) {
     prot = product.proteins
     fat = product.fats
     carb = product.carbs
+
+}
+
+
+fun currentProductUpdate(product: ConsumedProduct) {
+
+    name = product.productName
+    cal = product.calories
+    prot = product.proteins
+    fat = product.fats
+    carb = product.carbohydrates
 
 }
 

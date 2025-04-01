@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,6 +19,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -56,8 +59,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.jpscissor.callorease.R
+import ru.jpscissor.callorease.data.ConsumedProduct
 import ru.jpscissor.callorease.data.InputViewModel
 import ru.jpscissor.callorease.data.WaterData
+import ru.jpscissor.callorease.data.getConsumedProductsByTimeRange
 import ru.jpscissor.callorease.data.loadAndCalculateTotals
 import ru.jpscissor.callorease.data.saveWaterToFile
 import ru.jpscissor.callorease.screens.GlobalProgress.globCalories
@@ -151,7 +156,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(16.dp))
 
                 //Notes
-                Notes()
+                DayPeriod()
 
             }
 
@@ -685,96 +690,116 @@ fun WaterCounter(waterlvl: String) {
 
 
 @Composable
-fun Notes() {
+fun DayPeriod() {
+    val breakfastProducts = getConsumedProductsByTimeRange(
+        context = LocalContext.current,
+        filename = "consumed.json",
+        startTime = "00:00",
+        endTime = "11:00"
+    )
+
+    val lunchProducts = getConsumedProductsByTimeRange(
+        context = LocalContext.current,
+        filename = "consumed.json",
+        startTime = "12:00",
+        endTime = "16:00"
+    )
+
+    val dinnerProducts = getConsumedProductsByTimeRange(
+        context = LocalContext.current,
+        filename = "consumed.json",
+        startTime = "17:00",
+        endTime = "23:00"
+    )
+
+    val currentPhase = dayPhase()
+
+    val products = when (currentPhase) {
+        "Завтрак" -> breakfastProducts
+        "Обед" -> lunchProducts
+        "Ужин" -> dinnerProducts
+        else -> emptyList()
+    }
+
     Card(
         modifier = Modifier
-            .height(150.dp)
+            .height(125.dp)
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.onBackground ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground),
         shape = RoundedCornerShape(15.dp)
     ) {
-        Row(
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Text(
-                text = dayPhase(),
-                color = MaterialTheme.colorScheme.tertiary,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 4.dp)
-            )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                text = "(0Ккал)",
-                color = MaterialTheme.colorScheme.tertiary,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-        }
         Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Text(
-                text = "Здесь пока ничего нет :(",
-                color = MaterialTheme.colorScheme.tertiary,
 
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = currentPhase,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = "(${products.sumOf { it.calories.toInt() }}Ккал)",
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            if (products.isEmpty()) {
+                Text(
+                    text = "Здесь пока ничего нет :(",
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+//            else {
+//                LazyColumn {
+//                    items(products) { product ->
+//                        ProductItem(product)
+//                    }
+//                }
+//            }
         }
-//        Column(
-//            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-//        ) {
-//            Product("Яблоко", "100г")
-//            Product("Банан", "150г")
-//            Product("Red Bull", "350г")
-//            Product("Рис", "310г")
-//        }
     }
 }
 
 
 
+
 @Composable
-fun Product(name: String, wght: String) {
-    Row(
-        modifier = Modifier.padding(horizontal = 12.dp)
-    ) {
-        Text(
-            text = name,
-            color = MaterialTheme.colorScheme.tertiary,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.align(Alignment.CenterVertically)
-        )
-        Spacer(Modifier.weight(1f))
-        Text(
-            text = wght,
-            color = MaterialTheme.colorScheme.tertiary,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.align(Alignment.CenterVertically)
-        )
-    }
+fun ProductItem(product: ConsumedProduct) {
+
 }
 
 
 
 @Composable
 fun BottomPanel(onButtonClick: () -> Unit) {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .height(90.dp)
             .background(MaterialTheme.colorScheme.onBackground),
-        contentAlignment = Alignment.Center
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconButton(
             onClick = onButtonClick,
-            modifier = Modifier.size(60.dp).align(Alignment.Center)
+            modifier = Modifier.size(70.dp).padding(top = 8.dp)
         ) {
             Image(
                 painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.plus_button) }

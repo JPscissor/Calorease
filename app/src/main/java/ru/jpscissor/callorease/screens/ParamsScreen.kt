@@ -51,7 +51,7 @@ fun ParamsScreen(onBack: () -> Unit) {
     ) {
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 16.dp)
+            modifier = Modifier.fillMaxSize().padding(end = 24.dp, start = 24.dp, top = 16.dp, bottom = 16.dp)
         ) {
             ApperPanel("Параметры", if (
                 (GlobalParams.weight != 0) && (GlobalParams.weight in 30..300) &&

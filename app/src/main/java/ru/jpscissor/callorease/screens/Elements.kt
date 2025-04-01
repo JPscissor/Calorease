@@ -62,7 +62,7 @@ fun ApperPanel(txt: String, nav: () -> Unit) {
 @Composable
 fun systemPaddingWithoutBottom(): PaddingValues {
     val insets = WindowInsets.systemBars.asPaddingValues()
-    val hasNavigationBar = WindowInsets.navigationBars.getBottom(LocalDensity.current) > 0
+    val hasNavigationBar = WindowInsets.navigationBars.getBottom(LocalDensity.current) > 100
 
     return if (hasNavigationBar) {
         insets

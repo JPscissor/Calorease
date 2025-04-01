@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.LocalDate
+import java.time.LocalTime
 
 
 @Serializable
@@ -16,7 +17,8 @@ data class ConsumedProduct(
     val fats: Double,
     val carbohydrates: Double,
     val grams: Int,
-    val consumedDate: String
+    val consumedDate: String,
+    val consumedTime: String
 )
 
 
@@ -31,6 +33,8 @@ fun addConsumedProduct(
 ) {
     val consumedProducts = loadConsumedProductsFromFile(context, "consumed.json").toMutableList()
 
+    val currentTime = LocalTime.now().toString()
+
     val consumedProduct = ConsumedProduct(
         productName = name,
         calories = calories * grams / 100,
@@ -38,10 +42,11 @@ fun addConsumedProduct(
         fats = fats * grams / 100,
         carbohydrates = carbs * grams / 100,
         grams = grams,
-        consumedDate = LocalDate.now().toString()
+        consumedDate = LocalDate.now().toString(),
+        consumedTime = currentTime
     )
 
-    Log.d("AddProduct", "Added product: ${consumedProduct.productName}, Date: ${consumedProduct.consumedDate}")
+    Log.d("AddProduct", "Added product: ${consumedProduct.productName}, Time: ${consumedProduct.consumedTime}")
 
     consumedProducts.add(0, consumedProduct)
 
@@ -66,14 +71,12 @@ fun saveConsumedProductsToFile(context: Context, filename: String, consumedProdu
 fun loadConsumedProductsFromFile(context: Context, filename: String): List<ConsumedProduct> {
     return try {
         val jsonString = context.openFileInput(filename).bufferedReader().use { it.readText() }
-        Log.d("FileLoad", "Loaded JSON: $jsonString")
-
         val products = Json.decodeFromString<List<ConsumedProduct>>(jsonString)
 
-
-        products.map { product ->
-            if (product.consumedDate.isEmpty()) {
-                product.copy(consumedDate = LocalDate.now().toString())
+        products.mapNotNull { product ->
+            if (product.consumedTime.isEmpty()) {
+                Log.e("FileLoad", "Missing consumedTime for product: ${product.productName}")
+                null
             } else {
                 product
             }
@@ -112,33 +115,11 @@ fun initializeConsumedProductsFile(context: Context, filename: String) {
 }
 
 
-fun clearOldData(context: Context, filename: String) {
+fun calculateTotals(context: Context, filename: String): Map<String, Double> {
     val today = LocalDate.now().toString()
-    val consumedProducts = loadConsumedProductsFromFile(context, filename).toMutableList()
+    val consumedProducts = loadConsumedProductsFromFile(context, filename)
+        .filter { it.consumedDate == today }
 
-    Log.d("ClearOldData", "Today's date: $today")
-    Log.d("ClearOldData", "Loaded products: ${consumedProducts.map { it.consumedDate }}")
-
-    if (consumedProducts.isEmpty()) {
-        Log.d("ClearOldData", "No products to clear")
-        return
-    }
-
-    if (!isSameDay(consumedProducts.first().consumedDate, today)) {
-        Log.d("ClearOldData", "Clearing old data")
-        consumedProducts.clear()
-        saveConsumedProductsToFile(context, filename, consumedProducts)
-    } else {
-        Log.d("ClearOldData", "Data is up-to-date")
-    }
-}
-
-fun isSameDay(date1: String, date2: String): Boolean {
-    return date1 == date2
-}
-
-
-fun calculateTotals(consumedProducts: List<ConsumedProduct>): Map<String, Double> {
     val totalCalories = consumedProducts.sumOf { it.calories }
     val totalProteins = consumedProducts.sumOf { it.proteins }
     val totalCarbohydrates = consumedProducts.sumOf { it.carbohydrates }
@@ -154,8 +135,7 @@ fun calculateTotals(consumedProducts: List<ConsumedProduct>): Map<String, Double
 
 
 fun loadAndCalculateTotals(context: Context, filename: String): Map<String, Double> {
-    val consumedProducts = loadConsumedProductsFromFile(context, filename)
-    return calculateTotals(consumedProducts)
+    return calculateTotals(context, filename)
 }
 
 
@@ -175,4 +155,34 @@ fun migrateOldData(context: Context, filename: String) {
     }
 
     saveConsumedProductsToFile(context, filename, updatedProducts)
+}
+
+
+fun getLast10Products(context: Context, filename: String): List<ConsumedProduct> {
+    val allProducts = loadConsumedProductsFromFile(context, filename)
+
+    Log.d("RecentProducts", "Total products: ${allProducts.size}")
+
+    return allProducts.takeLast(10)
+}
+
+
+fun getConsumedProductsByTimeRange(
+    context: Context,
+    filename: String,
+    startTime: String,
+    endTime: String
+): List<ConsumedProduct> {
+    val allProducts = loadConsumedProductsFromFile(context, filename)
+    return allProducts.filter { product ->
+        try {
+            val productTime = LocalTime.parse(product.consumedTime)
+            val start = LocalTime.parse(startTime)
+            val end = LocalTime.parse(endTime)
+            !productTime.isBefore(start) && !productTime.isAfter(end)
+        } catch (e: Exception) {
+            Log.e("FilterError", "Invalid time format for product: ${product.productName}")
+            false
+        }
+    }
 }

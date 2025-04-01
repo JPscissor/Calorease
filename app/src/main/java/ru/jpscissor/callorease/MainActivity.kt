@@ -7,20 +7,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ru.jpscissor.callorease.data.clearOldData
 import ru.jpscissor.callorease.data.clearOldWater
 import ru.jpscissor.callorease.data.fileExistsInInternalStorage
 import ru.jpscissor.callorease.data.initializeConsumedProductsFile
 import ru.jpscissor.callorease.data.initializeWaterFile
-import ru.jpscissor.callorease.data.loadConsumedProductsFromFile
 import ru.jpscissor.callorease.data.loadProfileFromJson
-import ru.jpscissor.callorease.data.loadWaterFromFile
 import ru.jpscissor.callorease.data.migrateOldData
 import ru.jpscissor.callorease.data.migrateOldWaterData
 import ru.jpscissor.callorease.navigation.AppNavHost
@@ -49,9 +45,6 @@ class MainActivity : ComponentActivity() {
                 Log.d("onCreate", "Initializing consumed.json")
                 initializeConsumedProductsFile(this, "consumed.json")
             }
-
-            Log.d("onCreate", "Clearing old data")
-            clearOldData(this, "consumed.json")
 
             Log.d("onCreate", "Initialization completed")
         } catch (e: Exception) {

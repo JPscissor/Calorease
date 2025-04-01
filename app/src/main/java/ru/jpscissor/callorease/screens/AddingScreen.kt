@@ -164,14 +164,25 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
 
                 Spacer(Modifier.height(32.dp))
 
-                Text(
-                    "Вес порции",
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
+                Row (modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Вес порции",
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = " (гр)",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Light,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+
                 Spacer(Modifier.height(8.dp))
                 Card(
                     modifier = Modifier

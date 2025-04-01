@@ -75,7 +75,7 @@ fun InputScreen(onNavigateToHome: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 16.dp)
+                .padding(end = 24.dp, start = 24.dp, top = 16.dp, bottom = 32.dp)
         ) {
             // Заголовок
             Column(
