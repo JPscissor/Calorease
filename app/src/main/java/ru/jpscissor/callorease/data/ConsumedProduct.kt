@@ -163,7 +163,12 @@ fun getLast10Products(context: Context, filename: String): List<ConsumedProduct>
 
     Log.d("RecentProducts", "Total products: ${allProducts.size}")
 
-    return allProducts.takeLast(10)
+    val uniqueProducts = allProducts
+        .reversed()
+        .distinctBy { it.productName }
+        .reversed()
+
+    return uniqueProducts.takeLast(10)
 }
 
 

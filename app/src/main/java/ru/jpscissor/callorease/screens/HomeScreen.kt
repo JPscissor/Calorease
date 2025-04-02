@@ -723,7 +723,7 @@ fun DayPeriod() {
 
     Card(
         modifier = Modifier
-            .height(125.dp)
+            .height(130.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground),
         shape = RoundedCornerShape(15.dp)
@@ -731,12 +731,17 @@ fun DayPeriod() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
         ) {
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
+//                Image(painter = if (currentTheme() == 1) painterResource(R.drawable.triangle_green)
+//                else painterResource(R.drawable.triangle), contentDescription = "", Modifier.size(8.dp))
+//
+//                Spacer(Modifier.width(4.dp))
+
                 Text(
                     text = currentPhase,
                     color = MaterialTheme.colorScheme.tertiary,
@@ -753,7 +758,7 @@ fun DayPeriod() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
 
             if (products.isEmpty()) {
@@ -766,13 +771,15 @@ fun DayPeriod() {
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-//            else {
-//                LazyColumn {
-//                    items(products) { product ->
-//                        ProductItem(product)
-//                    }
-//                }
-//            }
+            else {
+                LazyColumn(
+
+                ) {
+                    items(products) { product ->
+                        ProductItem(product)
+                    }
+                }
+            }
         }
     }
 }
@@ -782,8 +789,33 @@ fun DayPeriod() {
 
 @Composable
 fun ProductItem(product: ConsumedProduct) {
+    val productName = if (product.productName.length > 20) {
+        product.productName.substring(0, 20) + "..."
+    } else {
+        product.productName
+    }
 
+    Row(
+        modifier = Modifier.padding(horizontal = 12.dp)
+    ) {
+        Text(
+            text = productName,
+            color = MaterialTheme.colorScheme.tertiary,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
+        Spacer(Modifier.weight(1f))
+        Text(
+            text = product.grams.toString(),
+            color = MaterialTheme.colorScheme.tertiary,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
+    }
 }
+
 
 
 
@@ -923,7 +955,7 @@ fun WaterDialog(
                     value = waterInput,
                     shape = RoundedCornerShape(15.dp),
                     onValueChange = { newValue ->
-                        waterInput = newValue.filter { it.isDigit() } // Разрешаем только цифры
+                        waterInput = newValue.filter { it.isDigit() }
                     },
 
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

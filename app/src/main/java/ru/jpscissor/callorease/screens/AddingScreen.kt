@@ -39,9 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.jpscissor.callorease.data.Product
 import ru.jpscissor.callorease.data.addConsumedProduct
-import ru.jpscissor.callorease.data.initializeConsumedProductsFile
 import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 import ru.jpscissor.callorease.ui.theme.currentTheme
 
@@ -50,6 +48,12 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
     var pweight by remember { mutableStateOf("") }
 
     val context = LocalContext.current
+
+    val currentProductName = if (CurrentProduct.name.length > 40) {
+        CurrentProduct.name.substring(0, 40) + "..."
+    } else {
+        CurrentProduct.name
+    }
 
     Column(
         modifier = Modifier
@@ -62,7 +66,7 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
                 .fillMaxSize()
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-            ApperPanel( CurrentProduct.name, onBack)
+            ProductApperPanel ( currentProductName, onBack)
 
             Column(
                 modifier = Modifier.fillMaxSize(),

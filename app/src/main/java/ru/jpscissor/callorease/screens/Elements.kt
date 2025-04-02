@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.jpscissor.callorease.R
@@ -45,16 +47,47 @@ fun ApperPanel(txt: String, nav: () -> Unit) {
             modifier = Modifier.size(30.dp).clickable { nav() }
         )
 
-        Spacer(Modifier.weight(1f))
+        Text(
+            text = txt,
+            fontSize = if (txt.length > 20) 24.sp else 36.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.tertiary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+
+    }
+}
+
+
+@Composable
+fun ProductApperPanel(txt: String, nav: () -> Unit) {
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = if ( currentTheme() != 1 ) painterResource(R.drawable.arrow) else painterResource(
+                R.drawable.arrow_green
+            ),
+            contentDescription = "",
+            modifier = Modifier.size(30.dp).clickable { nav() }
+        )
+
+        Spacer(Modifier.width(16.dp))
 
         Text(
             text = txt,
-            fontSize = 36.sp,
+            fontSize = if (txt.length > 20) 20.sp else 36.sp,
             fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.tertiary
+            color = MaterialTheme.colorScheme.tertiary,
+            textAlign = TextAlign.Center
         )
 
-        Spacer(Modifier.weight(1f))
+//        Spacer(Modifier.weight(1f))
     }
 }
 
