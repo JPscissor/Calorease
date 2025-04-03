@@ -111,8 +111,8 @@ fun setFats(calories: Int): Int {
 
 fun setCalories(weight: Int, height: Int, age: Int, gender: Int, alvl: Int): Int {
 
-    val mod = if (alvl == 0 ) 1.1
-    else if ( alvl == 1 ) 1.45
+    val mod = if (alvl == 0 ) 1.25
+    else if ( alvl == 1 ) 1.47
     else 1.6
 
     val cals = if (gender == 0) ( ((10 * weight) + (6.25 * height) - (5 * age) + 5 ) ) * mod
