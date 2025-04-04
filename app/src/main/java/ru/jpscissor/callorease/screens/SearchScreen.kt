@@ -37,6 +37,7 @@ import ru.jpscissor.callorease.screens.CurrentProduct.carb
 import ru.jpscissor.callorease.screens.CurrentProduct.fat
 import ru.jpscissor.callorease.screens.CurrentProduct.name
 import ru.jpscissor.callorease.screens.CurrentProduct.prot
+import kotlin.math.pow
 import kotlin.math.roundToInt
 
 object CurrentProduct{
@@ -94,7 +95,10 @@ fun SearchScreen(onBack: () -> Unit, onProductSelect: () -> Unit, context: Conte
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Image(
-                            painter = if (currentTheme() == 1) painterResource(R.drawable.search_green) else painterResource(R.drawable.search),
+                            painter =
+                            if (currentTheme() == 1) painterResource(R.drawable.search_green)
+                            else if (currentTheme() == 3) painterResource(R.drawable.search_pink)
+                            else painterResource(R.drawable.search),
                             modifier = Modifier.size(25.dp),
                             contentDescription = ""
                         )
@@ -265,15 +269,19 @@ fun currentProductUpdate(product: Product) {
 
 }
 
+fun Double.roundToDecimalPlaces(decimalPlaces: Int): Double {
+    val factor = 10.0.pow(decimalPlaces)
+    return (this * factor).roundToInt() / factor
+}
 
 @SuppressLint("DefaultLocale")
 fun currentProductUpdate(product: ConsumedProduct) {
 
     name = product.productName
-    cal = String.format("%.2f", (product.calories / product.grams) * 100).toDouble()
-    prot = String.format("%.2f", (product.proteins / product.grams) * 100).toDouble()
-    fat = String.format("%.2f", (product.fats / product.grams) * 100).toDouble()
-    carb = String.format("%.2f", (product.carbohydrates / product.grams) * 100).toDouble()
+    cal = ((product.calories / product.grams) * 100).roundToDecimalPlaces(2)
+    prot = ((product.proteins / product.grams) * 100).roundToDecimalPlaces(2)
+    fat = ((product.fats / product.grams) * 100).roundToDecimalPlaces(2)
+    carb = ((product.carbohydrates / product.grams) * 100).roundToDecimalPlaces(2)
 
 }
 

@@ -287,6 +287,8 @@ fun AddingScreen( onBack: () -> Unit, onComplete: () -> Unit) {
                     )
                 }
 
+                Spacer(Modifier.height(32.dp))
+
 
             }
 
@@ -307,7 +309,7 @@ fun CustomInputField2(
         modifier = Modifier.width(150.dp).height(70.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor =  if (currentTheme() == 1) MaterialTheme.colorScheme.background
+            containerColor =  if (currentTheme() == 1 || currentTheme() ==  3) MaterialTheme.colorScheme.background
             else Color(0xFFE4E4E4),
             contentColor =  Color.Black
         ),
@@ -329,7 +331,7 @@ fun CustomInputField2(
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    color = if (currentTheme() == 1) MaterialTheme.colorScheme.tertiary
+                    color = if (currentTheme() == 1 || currentTheme() ==  3) MaterialTheme.colorScheme.tertiary
                     else Color.Black,
                     fontSize = 24.sp
                 ),
@@ -344,7 +346,7 @@ fun CustomInputField2(
                     if (!isFocused && value.isEmpty()) {
                         Text(
                             "Введите...",
-                            color = Color.LightGray,
+                            color = MaterialTheme.colorScheme.tertiary,
                             fontSize = 15.sp,
                             textAlign = TextAlign.Center
                         )
