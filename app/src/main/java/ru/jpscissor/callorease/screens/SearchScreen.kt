@@ -1,5 +1,6 @@
 package ru.jpscissor.callorease.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import ru.jpscissor.callorease.screens.CurrentProduct.carb
 import ru.jpscissor.callorease.screens.CurrentProduct.fat
 import ru.jpscissor.callorease.screens.CurrentProduct.name
 import ru.jpscissor.callorease.screens.CurrentProduct.prot
+import kotlin.math.roundToInt
 
 object CurrentProduct{
     var name by mutableStateOf("")
@@ -264,13 +266,14 @@ fun currentProductUpdate(product: Product) {
 }
 
 
+@SuppressLint("DefaultLocale")
 fun currentProductUpdate(product: ConsumedProduct) {
 
     name = product.productName
-    cal = product.calories
-    prot = product.proteins
-    fat = product.fats
-    carb = product.carbohydrates
+    cal = String.format("%.2f", (product.calories / product.grams) * 100).toDouble()
+    prot = String.format("%.2f", (product.proteins / product.grams) * 100).toDouble()
+    fat = String.format("%.2f", (product.fats / product.grams) * 100).toDouble()
+    carb = String.format("%.2f", (product.carbohydrates / product.grams) * 100).toDouble()
 
 }
 
