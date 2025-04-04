@@ -69,8 +69,10 @@ fun MenuScreen(onNavigateToParams: () -> Unit, onNavigateToThemeSetter: () -> Un
                         verticalAlignment = Alignment.Bottom
                     ) {
 
-                        Image(painter = if (currentTheme() != 1) painterResource(R.drawable.params)
-                        else painterResource(R.drawable.params_green),
+                        Image(painter =
+                        if (currentTheme() == 1) painterResource(R.drawable.params_green)
+                        else if(currentTheme() == 3) painterResource(R.drawable.param_pink)
+                        else painterResource(R.drawable.params),
                             contentDescription = "",
                             modifier = Modifier.size(33.dp))
 
@@ -103,8 +105,10 @@ fun MenuScreen(onNavigateToParams: () -> Unit, onNavigateToThemeSetter: () -> Un
                         verticalAlignment = Alignment.Bottom
                     ) {
 
-                        Image(painter = if (currentTheme() != 1) painterResource(R.drawable.albm)
-                        else painterResource(R.drawable.albm_green),
+                        Image(painter =
+                        if (currentTheme() == 1) painterResource(R.drawable.albm_green)
+                        else if (currentTheme() == 3) painterResource(R.drawable.albm_pink)
+                        else painterResource(R.drawable.albm),
                             contentDescription = "",
                             modifier = Modifier.size(33.dp))
 
@@ -140,8 +144,10 @@ fun MenuScreen(onNavigateToParams: () -> Unit, onNavigateToThemeSetter: () -> Un
                         verticalAlignment = Alignment.Bottom
                     ) {
 
-                        Image(painter = if (currentTheme() != 1) painterResource(R.drawable.graph)
-                        else painterResource(R.drawable.graph_green),
+                        Image(painter =
+                        if (currentTheme() == 1) painterResource(R.drawable.graph_green)
+                        else if (currentTheme() == 3) painterResource(R.drawable.graph_pink)
+                        else painterResource(R.drawable.graph),
                             contentDescription = "",
                             modifier = Modifier.size(33.dp))
 

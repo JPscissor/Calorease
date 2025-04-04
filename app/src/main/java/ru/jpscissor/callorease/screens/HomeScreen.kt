@@ -74,6 +74,8 @@ import ru.jpscissor.callorease.screens.GlobalProgress.progressProteins
 import ru.jpscissor.callorease.screens.GlobalProgress.progressWater
 import ru.jpscissor.callorease.screens.GlobalProgress.secret
 import ru.jpscissor.callorease.screens.GlobalProgress.todayWater
+import ru.jpscissor.callorease.ui.theme.AppTheme
+import ru.jpscissor.callorease.ui.theme.LocalThemeManager
 import ru.jpscissor.callorease.ui.theme.currentTheme
 import java.time.LocalDate
 
@@ -187,39 +189,73 @@ fun HomeScreen(
 
 @Composable
 fun UpperPanel(click: () -> Unit) {
+    val themeManager = LocalThemeManager.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.Bottom
     ) {
-        Image(
-            painter =   if ( currentTheme() == 0 ) { painterResource(R.drawable.app_icon_black) }
-                        else if ( currentTheme() == 1 ) { painterResource(R.drawable.app_icon_green) }
-                        else { painterResource(R.drawable.app_icon_black) },
-            modifier = Modifier.width(65.dp).clickable { secret++ },
-            contentDescription = ""
-        )
-        Spacer(Modifier.width(6.dp))
 
-        Text(
-            "Calorease",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.tertiary
-        )
+        if (currentTheme() == 3) {
+            Image(
+                painter = painterResource(R.drawable.kuromi_logo_text),
+                contentDescription = "",
+                modifier = Modifier.width(200.dp)
+            )
+        }
+        else {
+            Image(
+                painter = if (currentTheme() == 0) {
+                    painterResource(R.drawable.app_icon_black)
+                } else if (currentTheme() == 1) {
+                    painterResource(R.drawable.app_icon_green)
+                } else {
+                    painterResource(R.drawable.app_icon_black)
+                },
+                modifier = Modifier
+                    .width(65.dp)
+                    .clickable {
+                        if (secret != 15) { secret++ }
+                        else { secret = 0; themeManager.selectedTheme = AppTheme.Kuromi }
+                    },
+                contentDescription = ""
+            )
+            Spacer(Modifier.width(6.dp))
+
+            Text(
+                "Calorease",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+    }
 
         Spacer(Modifier.weight(1f))
 
-        Image(
-            painter =   if ( currentTheme() == 0 ) { painterResource(R.drawable.ppl) }
-                        else if ( currentTheme() == 1 ) { painterResource(R.drawable.ppl_green) }
-                        else { painterResource(R.drawable.ppl) },
-            contentDescription = "",
-            modifier = Modifier
-                .width(28.dp)
-                .align(Alignment.Bottom)
-                .clickable { click() }
-        )
+        if( currentTheme() == 3 ) {
+            Image(
+                painter = painterResource(R.drawable.skull),
+                contentDescription = "",
+                modifier = Modifier.width(67.dp).clickable { click() }
+            )
+        }
+        else {
+            Image(
+                painter = if (currentTheme() == 0) {
+                    painterResource(R.drawable.ppl)
+                } else if (currentTheme() == 1) {
+                    painterResource(R.drawable.ppl_green)
+                } else {
+                    painterResource(R.drawable.ppl)
+                },
+                contentDescription = "",
+                modifier = Modifier
+                    .width(28.dp)
+                    .align(Alignment.Bottom)
+                    .clickable { click() }
+            )
+        }
 
         Spacer(modifier = Modifier.width(8.dp))
 
@@ -641,6 +677,7 @@ fun WaterCounter(waterlvl: String) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(painter = if (currentTheme() == 1) painterResource(R.drawable.triangle_green)
+                                else if (currentTheme() == 3) painterResource(R.drawable.triangle_pink)
                                 else painterResource(R.drawable.triangle), contentDescription = "", Modifier.size(8.dp))
 
                 Spacer(Modifier.weight(1f))
@@ -840,6 +877,7 @@ fun BottomPanel(onButtonClick: () -> Unit) {
             Image(
                 painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.plus_button) }
                             else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary) { painterResource(R.drawable.plus_button_green) }
+                            else if (currentTheme() == 3) { painterResource(R.drawable.button_pink) }
                             else { painterResource(R.drawable.plus_button) },
                 contentDescription = ""
             )

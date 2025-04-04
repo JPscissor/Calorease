@@ -21,7 +21,7 @@ import ru.jpscissor.callorease.R
 
 
 enum class AppTheme {
-    Light, Dark, Monochrome
+    Light, Dark, Monochrome, Kuromi
 }
 
 
@@ -88,6 +88,27 @@ private val LightColorScheme = lightColorScheme(
     onTertiaryContainer = Color.LightGray
 )
 
+private val KuromiColorScheme = lightColorScheme(
+    background = Color(0xffE0E1F3),
+    onBackground = Color(0xff373737),
+
+    surface = Color(0xffFFE9E9),
+    onSurface = Color(0xffF3A8BD),
+
+    surfaceVariant = Color(0xffFFE9E9),
+    onSurfaceVariant = Color(0xffF3A8BD),
+
+    inverseSurface = Color(0xffFFE9E9),
+    inverseOnSurface = Color(0xffF3A8BD),
+
+    secondary = Color(0xffFFE9E9),
+    onSecondary = Color(0xffF3A8BD),
+
+    tertiary = Color(0xFFF3A8BD),
+    onTertiary = Color.White,
+    onTertiaryContainer = Color(0x86F3A8BD)
+)
+
 
 @Composable
 fun inPreview(): Boolean = LocalInspectionMode.current
@@ -101,6 +122,7 @@ fun CallorEaseTheme(
         AppTheme.Light -> LightColorScheme
         AppTheme.Dark -> DarkColorScheme
         AppTheme.Monochrome -> MonochromeColorScheme
+        AppTheme.Kuromi -> KuromiColorScheme
     }
 
     val typography = if (inPreview()) PreviewTypography else Typography
@@ -121,6 +143,7 @@ class ThemeManager(private val context: Context) {
         get() = when (sharedPreferences.getString(SELECTED_THEME_KEY, "Light")) {
             "Dark" -> AppTheme.Dark
             "Monochrome" -> AppTheme.Monochrome
+            "Kuromi" -> AppTheme.Kuromi
             else -> AppTheme.Light
         }
         set(value) {
@@ -129,6 +152,7 @@ class ThemeManager(private val context: Context) {
         }
 
     val _currentTheme: MutableState<AppTheme> = mutableStateOf(selectedTheme)
+
     val currentTheme: AppTheme
         get() = _currentTheme.value
 
@@ -136,7 +160,8 @@ class ThemeManager(private val context: Context) {
         selectedTheme = when (selectedTheme) {
             AppTheme.Light -> AppTheme.Dark
             AppTheme.Dark -> AppTheme.Monochrome
-            AppTheme.Monochrome -> AppTheme.Light
+            AppTheme.Monochrome -> AppTheme.Kuromi
+            AppTheme.Kuromi -> AppTheme.Light
         }
     }
 
@@ -145,6 +170,7 @@ class ThemeManager(private val context: Context) {
             AppTheme.Light -> "Светлая тема"
             AppTheme.Dark -> "Тёмная тема"
             AppTheme.Monochrome -> "Монохромная тема"
+            AppTheme.Kuromi -> "Куроми тема"
         }
     }
 }
@@ -182,5 +208,6 @@ fun AppThemeWrapper(content: @Composable () -> Unit) {
 fun currentTheme(): Int {
     if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { return 0 }
     else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary) { return 1 }
-    else { return 2 }
+    else if (Color(0xff6FC8FF) == MaterialTheme.colorScheme.onSecondary) { return 2 }
+    else { return 3 }
 }

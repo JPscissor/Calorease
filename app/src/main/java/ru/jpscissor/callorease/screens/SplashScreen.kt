@@ -26,6 +26,7 @@ import ru.jpscissor.callorease.navigation.NavRoute
 import ru.jpscissor.callorease.ui.theme.AppTheme
 import ru.jpscissor.callorease.ui.theme.CallorEaseTheme
 import ru.jpscissor.callorease.ui.theme.LocalThemeManager
+import ru.jpscissor.callorease.ui.theme.currentTheme
 
 
 @Composable
@@ -52,6 +53,7 @@ fun SplashScreen(onNavigateToOnboard: () -> Unit, onNavigateToHome: () -> Unit, 
             Image(
                 painter =   if ( Color(0xFF1C1C1C) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.app_icon_black) }
                             else if (Color(0xffBDF168) == MaterialTheme.colorScheme.onSecondary ) { painterResource(R.drawable.app_icon_green) }
+                            else if (currentTheme() == 3) { painterResource(R.drawable.kuromi_logo) }
                             else { painterResource(R.drawable.app_icon_green_white) },
                 contentDescription = "",
                 modifier = Modifier.size(165.dp)

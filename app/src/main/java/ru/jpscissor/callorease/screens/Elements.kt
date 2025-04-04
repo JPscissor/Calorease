@@ -43,9 +43,9 @@ fun ApperPanel(txt: String, nav: () -> Unit) {
         horizontalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = if ( currentTheme() != 1 ) painterResource(R.drawable.arrow) else painterResource(
-                R.drawable.arrow_green
-            ),
+            if ( currentTheme() == 0 ) painterResource(R.drawable.arrow)
+            else if (currentTheme() == 1) painterResource(R.drawable.arrow_green)
+            else painterResource(R.drawable.arrow),
             contentDescription = "",
             modifier = Modifier.size(30.dp).clickable { nav() }
         )
@@ -73,9 +73,10 @@ fun ProductApperPanel(txt: String, nav: () -> Unit) {
         horizontalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = if ( currentTheme() != 1 ) painterResource(R.drawable.arrow) else painterResource(
-                R.drawable.arrow_green
-            ),
+            painter =
+            if ( currentTheme() == 0 ) painterResource(R.drawable.arrow)
+            else if (currentTheme() == 1) painterResource(R.drawable.arrow_green)
+            else painterResource(R.drawable.arrow),
             contentDescription = "",
             modifier = Modifier.size(30.dp).clickable { nav() }
         )
