@@ -1,5 +1,6 @@
 package ru.jpscissor.callorease.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +33,8 @@ import ru.jpscissor.callorease.ui.theme.currentTheme
 
 @Composable
 fun MenuScreen(onNavigateToParams: () -> Unit, onNavigateToThemeSetter: () -> Unit, onBack: () -> Unit) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -119,7 +123,9 @@ fun MenuScreen(onNavigateToParams: () -> Unit, onNavigateToThemeSetter: () -> Un
                 Spacer(Modifier.height(15.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth().height(100.dp),
-                    onClick = {},
+                    onClick = {
+                        Toast.makeText(context, "Пока недоступно!", Toast.LENGTH_SHORT).show()
+                    },
                     shape = RoundedCornerShape(15.dp),
                     colors = ButtonColors(
                         containerColor = MaterialTheme.colorScheme.onBackground,

@@ -30,6 +30,9 @@ import androidx.compose.ui.unit.sp
 import ru.jpscissor.callorease.R
 import ru.jpscissor.callorease.ui.theme.currentTheme
 import java.time.LocalDateTime
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun ApperPanel(txt: String, nav: () -> Unit) {
@@ -124,4 +127,12 @@ fun dayPhase(): String {
         currentHour in 17..23 -> "Ужин"
         else -> "Неизвестная фаза"
     }
+}
+
+
+
+@Composable
+fun ShowToast(message: String) {
+    val context = LocalContext.current
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }

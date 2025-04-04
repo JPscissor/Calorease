@@ -1,39 +1,41 @@
 package ru.jpscissor.callorease.screens
 
+ import android.widget.Toast
  import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+ import androidx.compose.foundation.layout.Arrangement
+ import androidx.compose.foundation.layout.Column
+ import androidx.compose.foundation.layout.Spacer
  import androidx.compose.foundation.layout.fillMaxHeight
  import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+ import androidx.compose.foundation.layout.padding
  import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+ import androidx.compose.material3.Button
+ import androidx.compose.material3.ButtonColors
  import androidx.compose.material3.MaterialTheme
  import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.res.painterResource
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.tooling.preview.Preview
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
  import ru.jpscissor.callorease.R
-import ru.jpscissor.callorease.screens.GlobalIndex.ind
-import ru.jpscissor.callorease.ui.theme.AppTheme
-import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
+ import ru.jpscissor.callorease.screens.GlobalIndex.ind
+ import ru.jpscissor.callorease.ui.theme.AppTheme
+ import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
  import ru.jpscissor.callorease.ui.theme.LocalThemeManager
  import ru.jpscissor.callorease.ui.theme.ThemeManager
 
 @Composable
 fun ThemeSetter(onBack: () -> Unit) {
     val themeManager = LocalThemeManager.current
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -74,6 +76,8 @@ fun ThemeSetter(onBack: () -> Unit) {
                         if (ind == 1) { themeManager.selectedTheme = AppTheme.Monochrome }
                         else if (ind == 2) { themeManager.selectedTheme = AppTheme.Dark; }
                         else if (ind == 3) { themeManager.selectedTheme = AppTheme.Light; }
+
+                        Toast.makeText(context, "Тема сохранена!", Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.height(50.dp).fillMaxWidth().align(Alignment.CenterHorizontally),
                     colors = ButtonColors(

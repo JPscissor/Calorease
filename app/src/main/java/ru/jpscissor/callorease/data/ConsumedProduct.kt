@@ -176,11 +176,16 @@ fun getConsumedProductsByTimeRange(
     context: Context,
     filename: String,
     startTime: String,
-    endTime: String
+    endTime: String,
+    consumedDate: String
 ): List<ConsumedProduct> {
     val allProducts = loadConsumedProductsFromFile(context, filename)
     return allProducts.filter { product ->
         try {
+            if (product.consumedDate != consumedDate) {
+                return@filter false
+            }
+
             val productTime = LocalTime.parse(product.consumedTime)
             val start = LocalTime.parse(startTime)
             val end = LocalTime.parse(endTime)

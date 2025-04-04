@@ -695,21 +695,24 @@ fun DayPeriod() {
         context = LocalContext.current,
         filename = "consumed.json",
         startTime = "00:00",
-        endTime = "11:00"
+        endTime = "11:00",
+        consumedDate = LocalDate.now().toString()
     )
 
     val lunchProducts = getConsumedProductsByTimeRange(
         context = LocalContext.current,
         filename = "consumed.json",
         startTime = "12:00",
-        endTime = "16:00"
+        endTime = "16:00",
+        consumedDate = LocalDate.now().toString()
     )
 
     val dinnerProducts = getConsumedProductsByTimeRange(
         context = LocalContext.current,
         filename = "consumed.json",
         startTime = "17:00",
-        endTime = "23:00"
+        endTime = "23:00",
+        consumedDate = LocalDate.now().toString()
     )
 
     val currentPhase = dayPhase()
@@ -737,10 +740,6 @@ fun DayPeriod() {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-//                Image(painter = if (currentTheme() == 1) painterResource(R.drawable.triangle_green)
-//                else painterResource(R.drawable.triangle), contentDescription = "", Modifier.size(8.dp))
-//
-//                Spacer(Modifier.width(4.dp))
 
                 Text(
                     text = currentPhase,
@@ -762,14 +761,19 @@ fun DayPeriod() {
 
 
             if (products.isEmpty()) {
-                Text(
-                    text = "Здесь пока ничего нет :(",
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Normal,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Здесь пока ничего нет :(",
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
             else {
                 LazyColumn(

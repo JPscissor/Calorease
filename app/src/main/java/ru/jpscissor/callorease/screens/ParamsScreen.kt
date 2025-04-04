@@ -1,5 +1,6 @@
 package ru.jpscissor.callorease.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,9 +38,11 @@ import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
 fun ParamsScreen(onBack: () -> Unit) {
     val context = LocalContext.current
 
-    var weight by remember { mutableStateOf("") }
-    var height by remember { mutableStateOf("") }
-    var age by remember { mutableStateOf("") }
+    var weight by remember { mutableStateOf(GlobalParams.weight.toString()) }
+    var height by remember { mutableStateOf(GlobalParams.height.toString()) }
+    var age by remember { mutableStateOf(GlobalParams.age.toString()) }
+
+    var isToastVisible by remember { mutableStateOf(false) }
 
     var pass = {}
 
@@ -193,6 +196,7 @@ fun ParamsScreen(onBack: () -> Unit) {
                             saveProfileToJson(context)
                             loadProfileFromJson(context)
                             onBack()
+                            Toast.makeText(context, "Параметры Сохранены!", Toast.LENGTH_SHORT).show()
                         }
                     },
                     modifier = Modifier
