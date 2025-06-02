@@ -1,42 +1,61 @@
 package ru.jpscissor.callorease.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.jpscissor.callorease.R
-import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
-import ru.jpscissor.callorease.ui.theme.currentTheme
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import android.content.Context
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalContext
+import ru.jpscissor.callorease.R
+import ru.jpscissor.callorease.R.*
 import ru.jpscissor.callorease.data.ConsumedProduct
 import ru.jpscissor.callorease.data.Product
 import ru.jpscissor.callorease.data.getLast10Products
-import ru.jpscissor.callorease.data.loadConsumedProductsFromFile
 import ru.jpscissor.callorease.screens.CurrentProduct.cal
 import ru.jpscissor.callorease.screens.CurrentProduct.carb
 import ru.jpscissor.callorease.screens.CurrentProduct.fat
 import ru.jpscissor.callorease.screens.CurrentProduct.name
 import ru.jpscissor.callorease.screens.CurrentProduct.prot
+import ru.jpscissor.callorease.ui.theme.AppThemeWrapper
+import ru.jpscissor.callorease.ui.theme.currentTheme
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -96,9 +115,9 @@ fun SearchScreen(onBack: () -> Unit, onProductSelect: () -> Unit, context: Conte
                     ) {
                         Image(
                             painter =
-                            if (currentTheme() == 1) painterResource(R.drawable.search_green)
-                            else if (currentTheme() == 3) painterResource(R.drawable.search_pink)
-                            else painterResource(R.drawable.search),
+                            if (currentTheme() == 1) painterResource(drawable.search_green)
+                            else if (currentTheme() == 3) painterResource(drawable.search_pink)
+                            else painterResource(drawable.search),
                             modifier = Modifier.size(25.dp),
                             contentDescription = ""
                         )

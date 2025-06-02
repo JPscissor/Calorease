@@ -1,8 +1,7 @@
 package ru.jpscissor.callorease.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,7 +55,9 @@ fun AppNavHost() {
 
 
 fun NavGraphBuilder.splashGraph(navController: NavController) {
-    composable(NavRoute.Splash.route) {
+    composable(
+        NavRoute.Splash.route
+    ) {
         SplashScreen(
             onNavigateToOnboard = {
                 navController.navigate(NavRoute.Onboard.route) {
@@ -72,7 +73,33 @@ fun NavGraphBuilder.splashGraph(navController: NavController) {
         )
     }
 
-    composable(NavRoute.Onboard.route) {
+    composable(
+        NavRoute.Onboard.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
         OnboardScreen(
             onNavigateToSelect = {
                 navController.navigate(NavRoute.Input.route) {
@@ -82,7 +109,33 @@ fun NavGraphBuilder.splashGraph(navController: NavController) {
         )
     }
 
-    composable(NavRoute.Input.route) {
+    composable(
+        NavRoute.Input.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
         InputScreen(
             onNavigateToHome = {
                 navController.navigate(NavRoute.ThemeSelection.route) {
@@ -92,7 +145,33 @@ fun NavGraphBuilder.splashGraph(navController: NavController) {
         )
     }
 
-    composable(NavRoute.ThemeSelection.route) {
+    composable(
+        NavRoute.ThemeSelection.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
         ThemeSelectionScreen(
             onBack = {
                 navController.navigate(NavRoute.Home.route) {
@@ -101,13 +180,37 @@ fun NavGraphBuilder.splashGraph(navController: NavController) {
             }
         )
     }
-
 }
 
 
 fun NavGraphBuilder.mainGraph(navController: NavController) {
-    composable(NavRoute.Home.route
-        ) {
+    composable(
+        NavRoute.Home.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
         HomeScreen(
             onNavigateToMenu = { navController.navigate(NavRoute.Menu.route) },
             onNavigateToSearch = { navController.navigate(NavRoute.Search.route) },
@@ -115,50 +218,141 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
         )
     }
 
-    composable(NavRoute.Menu.route,
-        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }
-        ) {
+    composable(
+        NavRoute.Menu.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
         MenuScreen(
-            onNavigateToParams = { navController.navigate(NavRoute.Params.route)},
-            onNavigateToThemeSetter = { navController.navigate(NavRoute.ThemeSetter.route)},
+            onNavigateToParams = { navController.navigate(NavRoute.Params.route) },
+            onNavigateToThemeSetter = { navController.navigate(NavRoute.ThemeSetter.route) },
             onBack = {
                 navController.popBackStack()
             }
         )
-
     }
 
-
-    composable(NavRoute.Params.route,
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(250)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }
-        ) {
-        ParamsScreen (
+    composable(
+        NavRoute.Params.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
+        ParamsScreen(
             onBack = {
                 navController.popBackStack()
             }
         )
-
     }
 
-    composable(NavRoute.ThemeSetter.route,
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(250)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }) {
+    composable(
+        NavRoute.ThemeSetter.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
         ThemeSetter(
             onBack = {
                 navController.popBackStack()
             }
         )
-
     }
 }
 
 
 
 fun NavGraphBuilder.addingGraph(navController: NavController) {
-    composable(NavRoute.Search.route,
-        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }
-        ) {
+    composable(
+        NavRoute.Search.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
         SearchScreen(
             onBack = {
                 navController.popBackStack()
@@ -168,18 +362,42 @@ fun NavGraphBuilder.addingGraph(navController: NavController) {
         )
     }
 
-    composable(NavRoute.Adding.route,
-        enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(250)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(250)) }
-        ) {
-       AddingScreen(
-           onBack = {
-               navController.popBackStack()
-           },
-           onComplete = { navController.navigate(NavRoute.Home.route){
-               popUpTo(NavRoute.Adding.route) { inclusive = true } }
-           }
-       )
+    composable(
+        NavRoute.Adding.route,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
+        AddingScreen(
+            onBack = {
+                navController.popBackStack()
+            },
+            onComplete = {
+                navController.navigate(NavRoute.Home.route) {
+                    popUpTo(NavRoute.Adding.route) { inclusive = true }
+                }
+            }
+        )
     }
-
 }

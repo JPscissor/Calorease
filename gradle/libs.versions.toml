@@ -1,4 +1,5 @@
 [versions]
+accompanistNavigationAnimation = "0.34.0"
 agp = "8.7.3"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -13,10 +14,13 @@ moshi = "1.15.0"
 moshiKotlin = "1.15.0"
 moshiKotlinCodegen = "1.15.0"
 navigationCompose = "2.8.9"
+navigationComposeVersion = "2.7.0"
 
 [libraries]
+accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-navigation-compose-v270 = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

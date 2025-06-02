@@ -64,4 +64,7 @@ dependencies {
 
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+
+    implementation(libs.androidx.navigation.compose.v270)
+    implementation(libs.accompanist.navigation.animation)
 }
