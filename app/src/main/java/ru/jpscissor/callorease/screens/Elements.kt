@@ -81,7 +81,7 @@ fun ProductApperPanel(txt: String, nav: () -> Unit) {
             modifier = Modifier.size(30.dp).clickable { nav() }
         )
 
-        Spacer(Modifier.width(16.dp))
+        Spacer(Modifier.weight(1f))
 
         Text(
             text = txt,
@@ -91,7 +91,7 @@ fun ProductApperPanel(txt: String, nav: () -> Unit) {
             textAlign = TextAlign.Center
         )
 
-//        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.weight(1f))
     }
 }
 
